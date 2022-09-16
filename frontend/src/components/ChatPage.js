@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Heading, Container } from '@chakra-ui/react'
+import { Heading, Container, Button } from '@chakra-ui/react'
 import { chatContext } from "../context/chatsState"
 import MyChats from './MyChats';
 import ChatBox from './ChatBox';
+import GroupChat from './GroupChat';
 
 function ChatPage() {
+    // console.log(":chat page render");
     const [selectedChat, setselectedChat] = useState()
     const context = useContext(chatContext);
 
@@ -23,6 +25,8 @@ function ChatPage() {
     return (
         <>
             <Heading textAlign={"center"}>My Chats</Heading>
+            
+            <GroupChat></GroupChat>
             <Container maxW='1000px'>
                 {context.chats.length > 0 ?
 

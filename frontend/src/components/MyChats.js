@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    Flex, Heading, Avatar, Stack, Text
+    Flex, Heading, Avatar, Stack, Text,Badge
 } from '@chakra-ui/react'
 function MyChats({ chat, _setselectedChat,selectedChat }) {
 
@@ -21,9 +21,12 @@ function MyChats({ chat, _setselectedChat,selectedChat }) {
                 <Flex flex={1} alignItems='center'>
                     <Avatar bg='teal.500' />
                     <Heading pl={2} fontSize={'1rem'} fontFamily={'body'}>
-                        {chat.users[0].name}
+                        {chat.isGroupChat? chat.chatName:chat.users[0].name}
                     </Heading>
-                    <Text ml={8} fontSize='md'>{chat.latestmessage ? chat.latestmessage : "Start a conversion now"}</Text>
+                    <Text ml={8} fontSize='md'>{chat.latestMessage ? chat.latestMessage.messege : "Start a conversion now"}</Text>
+
+                   {chat.unReadmessages>0? <Badge ml={"10px"} backgroundColor={"green.300"} borderRadius={"50px"}>{chat.unReadmessages}</Badge>:""}
+                    
                 </Flex>
 
             </Stack>

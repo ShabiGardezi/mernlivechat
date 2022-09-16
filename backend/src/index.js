@@ -9,9 +9,11 @@ const connectTodatabase=require("./connection");
 const getallchats=require("./routes/getallchats");
 const accessChat=require("./routes/accessChat");
 const searchuser=require("./routes/searchuser");
-
+const creategroupchat=require("./routes/creategroupchat");
+const Chat=require("../Models/chatModel")
 const cors = require("cors");
-const port = 5000
+
+const port = 5000 || process.env.port;
 
 connectTodatabase(); //connection to database
 
@@ -32,11 +34,55 @@ app.use("/api/getuser",getuser);
 app.use("/api/getallchats",getallchats);
 app.use("/api/accessChat",accessChat);
 app.use("/api/searchuser",searchuser);
+app.use("/api/creategroupchat",creategroupchat);
 
 //api endpoint routes for messages
 app.use("/api/sendmsg",sendmsg);
 app.use("/api/fetchmessages/:chat_id",fetchmessages);
 
-app.listen(port, () => {
+const server=app.listen(port, () => {
   console.log(`Chat app listening on port ${port}`)
+});
+
+const io= require("socket.io")(server,{
+  cors:{
+    origin:"http://localhost:3000"
+  }
+})
+
+io.on("connection" ,(socket)=>{
+
+//   socket.use(async([event,...args],next)=>{
+// if(event ==="new message"){
+//     const chat_id=args[0];
+//   const result= await Chat.findById(chat_id).populate("users","_id");
+//   socket.users=result.users;
+
+// }
+// next();
+//   });
+  
+  socket.on("setup",(user_id)=>{
+    socket.join(user_id);
+    socket.emit("user joined the room",user_id);
+    
+  });
+
+  socket.on("new message",(message)=>{
+     
+const chat=message.chat;
+      chat.users.forEach((user)=>{
+        if(message.sender._id===user._id) {
+          console.log("return")
+          return};
+         socket.to(user._id).emit("message received",message);
+      })
+
+  });
+
+socket.on("disconnect",(reason)=>{
+  console.log(reason)
+})
+
+
 })

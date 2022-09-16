@@ -8,20 +8,26 @@ module.exports = router;
 
 router.post("/", authuser, async (req, res) => {// send existing chat if available or craete new one
   if (req.user) {
-    const user_id = req.body.user_id;
+    const users = req.body.users;
+    const chatName=req.body.chatName;
     // console.log(req.body)
-    if (user_id) {
+    if (users.length >= 2) {
       try {
-
+          users.push(req.user._id);
         const newChat = new Chat({
-          users: [req.user._id, user_id]
+          users: users,
+          chatName,
+          isGroupChat:true,
+          groupAdmin:req.user._id
         });
         const savedChat = await newChat.save();
        
-        const response=await Chat.findById(savedChat._id).populate({
+        const response=await Chat.findById(savedChat._id)
+        .populate({
           path:"users",
-          match:{_id:{$eq:user_id}}
-        });
+          match:{_id:{$ne:req.user._id}}
+        })
+        .populate("groupAdmin");
 
         res.send({ success: true, payload: response });
       }
@@ -32,7 +38,7 @@ router.post("/", authuser, async (req, res) => {// send existing chat if availab
 
     }
     else {
-      res.send({ success: false, payload: "User_id not Found in body" });
+      res.send({ success: false, payload: "Group must contain 2 members" });
 
     }
   }

@@ -7,8 +7,8 @@ const messageSchema = new Schema({
   sender: { type: Schema.Types.ObjectId, required: true, ref: "user" },
 
   // receiver: { type: Schema.Types.ObjectId, required: true, ref: "user" },
-  chat: { type: Schema.Types.ObjectId, ref: "Chat" },
-  readBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  chat: { type: Schema.Types.ObjectId, ref: "chat" },
+  readBy: [{ type: Schema.Types.ObjectId, ref: "user" }],
   // creationDate:{
   //   type:Date,
   //   default:Date.now

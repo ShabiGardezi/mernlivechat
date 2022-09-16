@@ -3,6 +3,7 @@ const router = express.Router()
 const authuser = require('../../middlewares/authuser');
 const Message = require("../../Models/messageModel")
 const Chat = require("../../Models/chatModel")
+const User = require("../../Models/userModel")
 
 
 module.exports = router;
@@ -21,8 +22,20 @@ router.post("/", authuser, async (req, res) => {
             })
             try {
 
-                const savedMessage = await newMessage.save();
+                var savedMessage = await newMessage.save();
+                
+                // savedMessage= await savedMessage.populate("chat").execPopulate();
+                 savedMessage=await Chat.populate(savedMessage,{path:"chat",select:"users chatName isGroupChat groupAdmin" }
+                 
+                 );
+                 savedMessage=await User.populate(savedMessage,{path:"chat.users", select:"name"});
+                 savedMessage=await User.populate(savedMessage,{path:"sender", select:"name"});
+                 savedMessage=await User.populate(savedMessage,{path:"chat.groupAdmin", select:"name"});
+                 
+                // savedMessage= await savedMessage.populate("sender").execPopulate();
+                // console.log(savedMessage);
                 await Chat.findByIdAndUpdate(chat_id, { latestMessage: savedMessage._id });
+               
                 res.send({ success: true, payload: savedMessage })
             } catch (error) {
                 res.send({ success: false, payload: error })

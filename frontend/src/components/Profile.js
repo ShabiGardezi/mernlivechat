@@ -16,7 +16,9 @@ function Profile({name,img,_id}) {
   const context=useContext(chatContext);
 
  const handleclick=()=>{
-  const findChat=context.chats.find((i)=>{return i.users[0]._id===_id})
+  const findChat=context.chats.find((i)=>{
+    if(i.isGroupChat) return false;
+    return i.users[0]._id===_id})
   if(findChat) { 
     toast({
       

@@ -12,7 +12,7 @@ export const ChatState = (props) => {
         axios.get(`http://localhost:5000/api/getallchats`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
         .then(res => {
         //     console.log("fetchChats = ");
-        //   console.log(res.data.payload);
+          console.log(res.data.payload);
           setchats(res.data.payload)
 
         })
