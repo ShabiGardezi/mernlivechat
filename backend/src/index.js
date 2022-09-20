@@ -72,9 +72,7 @@ io.on("connection" ,(socket)=>{
      
 const chat=message.chat;
       chat.users.forEach((user)=>{
-        if(message.sender._id===user._id) {
-          console.log("return")
-          return};
+        if(message.sender._id===user._id) return;
          socket.to(user._id).emit("message received",message);
       })
 

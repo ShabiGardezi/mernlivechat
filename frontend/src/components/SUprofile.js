@@ -1,17 +1,13 @@
 import React ,{useContext}from 'react'
 import {
-   
-    Flex,
-    Heading,
    Avatar,
-    Stack,
-    useToast,
-    useColorModeValue,
+    useToast,Box,Text
+ 
   } from '@chakra-ui/react'
   import axios from 'axios';
   import {chatContext} from "../context/chatsState"
 
-function Profile({name,img,_id}) {
+function SUprofile({name,img,_id}) {
   const toast = useToast();
   const context=useContext(chatContext);
 
@@ -42,7 +38,8 @@ function Profile({name,img,_id}) {
  }
 
   return (
-    <Stack 
+    <>
+    {/* <Stack 
     onClick={handleclick}
     mt={3}
     borderWidth="1px"
@@ -59,13 +56,14 @@ function Profile({name,img,_id}) {
      {name}
       </Heading>
     </Flex>
-   
-     
-      
-     
-    
-  </Stack>
+  </Stack> */}
+  
+   <Box onClick={handleclick} borderRadius={"8px"} px="2" py={"1"} cursor={"pointer"} _hover={{backgroundColor:"blue.100"}} textAlign={"center"}>
+   <Avatar name={name} />
+   <Text> {name}</Text>
+</Box>
+</>
   )
 }
 
-export default Profile
+export default SUprofile

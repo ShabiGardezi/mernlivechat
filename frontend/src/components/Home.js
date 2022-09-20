@@ -1,7 +1,7 @@
-import SearchDrawer from "./SearchDrawer"
+
 import { React } from 'react'
 import ChatPage from "./ChatPage"
-
+import Navbar from "./Navbar"
 function Home(props) {
 // console.log("home renderd")
 
@@ -9,8 +9,8 @@ function Home(props) {
 
   return (
     <>
+    <Navbar/>
     
-      <SearchDrawer />
       <ChatPage/>
 </>
   )
