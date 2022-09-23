@@ -1,13 +1,14 @@
-import {React,useState} from 'react'
+import {React,useState,useContext} from 'react'
 import { Flex, Box, FormControl, FormLabel, Input, Checkbox, Stack, Button, Heading, Text, useColorModeValue,Link } from "@chakra-ui/react"
 import { useFormik } from "formik";
 import axios from "axios"
 import { Link as routerLink } from "react-router-dom";
 import { useToast } from '@chakra-ui/react'
+import {userContext} from "../context/userState"
 function Login(props) {
 
   const [isloading, setisloading] = useState(false);
-
+  const {_setUser } = useContext(userContext);
 
   const toast = useToast();
   const showtoast = ({ title, description, status, duration }) => {
@@ -38,9 +39,9 @@ function Login(props) {
           setisloading(false);
 
           if (res.data.success) {
-            props.handleLogin(true);
             localStorage.setItem("token",JSON.stringify(res.data.payload.token) )
             localStorage.setItem("user",JSON.stringify(res.data.payload.user) )
+            _setUser();
           }
           else{
             

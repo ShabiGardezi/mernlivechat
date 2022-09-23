@@ -7,7 +7,7 @@ import {
   import axios from 'axios';
   import {chatContext} from "../context/chatsState"
 
-function SUprofile({name,img,_id}) {
+function SUprofile({name,img,_id,onClose}) {
   const toast = useToast();
   const context=useContext(chatContext);
 
@@ -31,32 +31,15 @@ function SUprofile({name,img,_id}) {
     // console.log(res.data);
     // const arr=[{...res.data.payload,name}]
     // changechats(arr);
-    context.updateChats([...context.chats,res.data.payload])
- 
+    context.updateChats([res.data.payload,...context.chats])
+    onClose();
 
   })
  }
 
   return (
     <>
-    {/* <Stack 
-    onClick={handleclick}
-    mt={3}
-    borderWidth="1px"
-    borderRadius="lg"
-    w={{ sm: '100%', md: '100%' }}
-    
-    direction={{ base: 'column', md: 'row' }}
-    bg={useColorModeValue('white', 'gray.900')}
-    boxShadow={'md'}
-    padding={4}>
-    <Flex flex={1} alignItems='center'>
-    <Avatar bg='teal.500' />
-       <Heading pl={2} fontSize={'1rem'} fontFamily={'body'}>
-     {name}
-      </Heading>
-    </Flex>
-  </Stack> */}
+  
   
    <Box onClick={handleclick} borderRadius={"8px"} px="2" py={"1"} cursor={"pointer"} _hover={{backgroundColor:"blue.100"}} textAlign={"center"}>
    <Avatar name={name} />

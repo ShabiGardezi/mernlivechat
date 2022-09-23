@@ -52,19 +52,30 @@ const io= require("socket.io")(server,{
 
 io.on("connection" ,(socket)=>{
 
-//   socket.use(async([event,...args],next)=>{
-// if(event ==="new message"){
-//     const chat_id=args[0];
-//   const result= await Chat.findById(chat_id).populate("users","_id");
-//   socket.users=result.users;
+console.log("connected")
+  socket.use(async([event,...args],next)=>{
+if(event ==="setup"){
+ // return all Socket instances of the main namespace
+const sockets = await io.fetchSockets();
+let onlineUsers=[];
+for (const socket of sockets) {
+   let [temp,room]=socket.rooms
 
-// }
-// next();
-//   });
-  
+    if(room)
+    onlineUsers.push(room);
+
+}
+socket.onlineUsers=onlineUsers;
+}
+next();
+  });
+
   socket.on("setup",(user_id)=>{
     socket.join(user_id);
-    socket.emit("user joined the room",user_id);
+    // let [temp,rooms]=socket.rooms
+    // console.log(rooms)
+    socket.emit("user joined the room",{user_id,onlineUsers:socket.onlineUsers});
+    socket.broadcast.emit("i am online",user_id);
     
   });
 
@@ -77,6 +88,13 @@ const chat=message.chat;
       })
 
   });
+
+  socket.on("disconnecting", (reason) => {
+          let [temp,room]=socket.rooms
+        socket.broadcast.emit("user has left", room);
+     
+  });
+
 
 socket.on("disconnect",(reason)=>{
   console.log(reason)

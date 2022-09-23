@@ -27,7 +27,7 @@ router.post("/", authuser, async (req, res) => {// send existing chat if availab
           path:"users",
           match:{_id:{$ne:req.user._id}}
         })
-        .populate("groupAdmin");
+      
 
         res.send({ success: true, payload: response });
       }

@@ -1,20 +1,22 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
-import { Box,  Flex, Text, Divider, Button,  Avatar, AvatarBadge, Input, IconButton,  useToast, Center } from '@chakra-ui/react'
+import { Box,  Flex, Text, Divider, Button,  Avatar, AvatarBadge, Input, AvatarGroup,IconButton,  useToast, Center, HStack } from '@chakra-ui/react'
 import {  AttachmentIcon } from '@chakra-ui/icons'
 import axios from "axios"
 import { chatContext } from "../context/chatsState"
-import io from "socket.io-client"
+import GroupInfomodal from './GroupInfomodal'
 
-var socket = 0;
+// var socket = 0;
 function ChatBox({ selectedChat }) {
+ 
     // console.log("chat box render");
+    
     const toast = useToast();
     const [messages, setmessages] = useState([])
-    const { user, chats, updateChats } = useContext(chatContext);
-    // const [socketConnected, setsocketConnected] = useState(false)
-    const [roomjoined, setroomjoined] = useState(false);
-    const [chatInfo, setchatInfo] = useState({})
-
+    const { user, chats, updateChats,socket,roomjoined,onlineUsers } = useContext(chatContext);
+   
+    const [chatInfo, setchatInfo] = useState()
+    
+    const [onlineStatus, setonlineStatus] = useState("Offline")
 
 
     const AlwaysScrollToBottom = () => {
@@ -23,21 +25,15 @@ function ChatBox({ selectedChat }) {
         return <div ref={elementRef} />;
     };
 
-    useEffect(() => {
-        socket = io("http://localhost:5000");
-
-        socket.emit("setup", user._id);
-        socket.on("user joined the room", (user_id) => {
-            setroomjoined(true);
-        })
-        // eslint-disable-next-line
-    }, [])
+    
 
 
     useEffect(() => {
+
+       
 
         socket.on("message received", (msg) => {
-            console.log("inside receive");
+            
             if (selectedChat !== msg.chat._id) {
                 // handle notifications
                 let index = chats.findIndex((e) => {
@@ -83,34 +79,56 @@ function ChatBox({ selectedChat }) {
         })
 
 
-        const getChatinfo=()=>{
-            const chat=chats.find((e)=>{
-              return e._id===selectedChat;
-            })
-            setchatInfo(chat)
-      }
-      getChatinfo();
+       
 
         return () => socket.off("message received");
     })
 
 
     useEffect(() => {
+        const getChatinfo=()=>{
+           
+            const chat=chats.find((e)=>{
+              return e._id===selectedChat;
+            })
+            setchatInfo(chat)
+          
+      }
+      getChatinfo();
         const fetchMessages = () => {
             if (!selectedChat) return;
 
             axios.get(`http://localhost:5000/api/fetchmessages/${selectedChat}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
                 .then(res => {
-                    // console.log(res.data)
                     if (res.data.success) {
                         setmessages(res.data.payload);
+                       
                     }
                 })
         }
         fetchMessages();
 
-
+// eslint-disable-next-line
     }, [selectedChat]);
+
+
+
+    useEffect(() => {
+   
+        const showStatus=()=>{
+            if(chatInfo)
+        {  if(!chatInfo.isGroupChat)
+           { const foundOnline=onlineUsers.includes(chatInfo.users[0]._id);
+            if(foundOnline) setonlineStatus("Online")
+            else setonlineStatus("Offline")
+          }}
+        }
+    
+        showStatus();
+    
+    
+      }, [onlineUsers,chatInfo])
+
 
     const handlesend = () => {
         const msg = document.getElementById("msgInput").value;
@@ -140,59 +158,45 @@ function ChatBox({ selectedChat }) {
 
     }
  
-   
+   const [showModal, setshowModal] = useState(false)
 
 
     return (
         <>
-            {/* <Box position={"relative"} height={"400px"} width={"100%"} backgroundColor={"blackAlpha.800"} borderWidth={"2px"}>
-                <Box overflowY={"scroll"} height={"350px"} width={"100%"} >
-
-                    {messages.length > 0 ? messages.map((element, index) => {
-                        return (
-                            <Box key={index} width={"250px"} m={"8px"} mt={"16px"} borderRadius={"20px"} pt={"3px"} pb={"3px"} backgroundColor={"green.300"} color={"blackAlpha.900"}
-                                ml={user._id === element.sender._id ? "auto" : ""}
-
-                            >
-
-                                <Text> {user._id === element.sender._id ? element.messege : `from ${element.sender.name}: ${element.messege}`} </Text>
-                            </Box>
-                        );
-                    })
-
-
-
-
-
-                        : <Center mt={"20%"} color={"white"}>"No messages of this chat"</Center>}
-                </Box>
-
-
-                <Box backgroundColor={"blackAlpha.800"} p={"5px"} display={"flex"} bottom={0} width={"100%"} position={"absolute"}>
-                    <Input borderRadius={"20px"} mr={"20px"} backgroundColor={"white"} id='msgInput' type={"text"}></Input>
-                    <Button backgroundColor={"blue.500"} color={"white"} width={"80px"} borderRadius={"20px"} id='send_btn' onClick={handlesend}>Send</Button>
-                </Box>
-
-            </Box> */}
-
-
-
-
+           
 
             {/* message box start below */}
             <Box h="100%" w={"70%"} px="12px" pt={"5px"}>
 
 
                 <Flex w="100%">
-                    <Avatar size="lg" src="">
-                        <AvatarBadge boxSize="1.25em" bg="green.500" />
-                    </Avatar>
-                    <Flex flexDirection="column" mx="5" justify="center">
-                        <Text fontSize="lg" fontWeight="bold">
-                        {chatInfo?chatInfo.isGroupChat? chatInfo.chatName:chatInfo.users[0].name:""}
-                        </Text>
-                        <Text color="green.500">Online</Text>
-                    </Flex>
+                    
+                {chatInfo?chatInfo.isGroupChat? 
+                <HStack cursor={"pointer"} onClick={()=>setshowModal(true)}>
+                    <GroupInfomodal users={chatInfo.users} showModal={showModal} setshowModal={setshowModal} chatInfo={chatInfo}/>
+                <AvatarGroup size='lg' max={2}>
+                    {chatInfo?chatInfo.users.map((e,i)=>{
+                        return <Avatar key={i} name={e.name} src='' />
+                    }):""}
+                 <Avatar name={user.name} src='https://bit.ly/code-beast' />
+                
+              </AvatarGroup>
+              <Text fontSize="xl" fontWeight="bold">{chatInfo?chatInfo.chatName:"" }</Text>
+                </HStack>
+                :<>
+                <Avatar size="lg" name={chatInfo?chatInfo.users[0].name:"Loading" }src="">
+                <AvatarBadge boxSize="1.25em" bg={onlineStatus==="Online"?'green.500':'red.500'} />
+              </Avatar>
+              <Flex flexDirection="column" mx="5" justify="center">
+                  <Text fontSize="lg" fontWeight="bold">
+                  {chatInfo?chatInfo.users[0].name:"" }
+                  </Text>
+                  <Text color={onlineStatus==="Online"?'green.500':'red.500'}>{onlineStatus}</Text>
+                </Flex>
+                </>:""}
+                
+
+                   
                 </Flex>
                 <Divider borderBottomWidth="3px" color="black" mt="5" />
 
@@ -203,8 +207,9 @@ function ChatBox({ selectedChat }) {
 
                 {messages.length > 0 ? messages.map((element, index) => {
                     return (
-                        user._id === element.sender._id?<Flex w="100%" justify="flex-end">
+                        user._id === element.sender._id?<Flex w="100%" key={index}justify="flex-end">
                         <Flex
+                        
                             flexDirection={"column"}
                             bg="#0078FF"
                             color="white"
@@ -214,20 +219,22 @@ function ChatBox({ selectedChat }) {
                             my="1"
                             // p="3"
                             px={"3"}
-                            pt="1"
+                           pt="1"
                         >
                             <Text>{element.messege}</Text>
                             <Text alignSelf={"end"} fontSize={["10px", "12px"]}>6:30 PM</Text>
                         </Flex>
                     </Flex>
-                    : <Flex w="100%">
-                    <Avatar
-                        name="Computer"
+                    : 
+                    <Flex w="100%" key={index} >
+                     <Avatar
+                        name={element.sender.name}
                         size={"sm"}
-                        src="https://avataaars.io/?avatarStyle=Transparent&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"
-                        bg="blue.300"
-                    ></Avatar>
-                    <Flex
+                        src=""
+                        
+                      > </Avatar>
+                      <Flex
+                      ml={"5px"}
                         flexDirection={"column"}
                         bg="gray.100"
                         color="black"
@@ -235,11 +242,12 @@ function ChatBox({ selectedChat }) {
                         minW="100px"
                         maxW="350px"
                         px={"3"}
-                        pt="1"
+                        pt={chatInfo?chatInfo.isGroupChat?"":"1":"" }
                         my="1"
 
-                    >
-                        <Text>{user._id === element.sender._id ? element.messege : `from ${element.sender.name}: ${element.messege}`}
+                       >
+                        {chatInfo?chatInfo.isGroupChat?<Text alignSelf={"end"} fontSize={["10px", "12px"]}>{element.sender.name}</Text>:"":""}
+                        <Text>{element.messege}
 
                         </Text>
                         <Text alignSelf={"end"} fontSize={["10px", "12px"]}>6:30 PM</Text>
@@ -250,7 +258,7 @@ function ChatBox({ selectedChat }) {
                     );
                 })
 
-                    : <Center mt={"20%"} color={"white"}>"No messages of this chat"</Center>}
+                    : <Center mt={"20%"} >No messages of this chat</Center>}
 
 
 

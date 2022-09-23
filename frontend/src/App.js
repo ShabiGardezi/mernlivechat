@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState,useContext} from 'react'
 import './App.css';
 import Login from './components/Login';
 import Signup from './components/SignUp';
@@ -8,24 +8,21 @@ import {
   Route,
 } from "react-router-dom";
 import Home from './components/Home';
-import {ChatState} from "./context/chatsState"
+import {userContext} from "./context/userState"
+
 
 function App() {
-
-  const [isLoggedin, setisLoggedin] = useState(false);
-  const handleLogin=(value)=>{
-    setisLoggedin(value);
-  
-  }
+  const { user } = useContext(userContext);
   
 
   return (
-    <ChatState>
+
+    
     <BrowserRouter>
-    {!isLoggedin? 
+    {!user? 
      <Routes>
      <>
-     <Route path="/" element={<Login handleLogin={handleLogin}/>} />
+     <Route path="/" element={<Login/>} />
      <Route path="/signup" element={<Signup />} />
      </>
      </Routes>
@@ -38,7 +35,7 @@ function App() {
     </>
       }
   </BrowserRouter>
-  </ChatState>
+  
   );
 }
 

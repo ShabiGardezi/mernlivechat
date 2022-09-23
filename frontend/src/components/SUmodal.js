@@ -56,7 +56,7 @@ function SUModal({isOpen, onOpen, onClose}) {
 
                <Flex maxH={"240px"} overflowY="auto" flexWrap={"wrap"} mt="6px"  align="center" justifyContent={"center"}>
                {searchUsers.length > 0 ? searchUsers.map((element, index) => {
-              return <SUprofile  key={index} name={element.name} img={element.profileImage} _id={element._id}  />
+              return <SUprofile onClose={onClose} key={index} name={element.name} img={element.profileImage} _id={element._id}  />
             }
 
             ) : ""}

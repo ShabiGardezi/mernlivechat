@@ -2,6 +2,7 @@
 import { React } from 'react'
 import ChatPage from "./ChatPage"
 import Navbar from "./Navbar"
+import {ChatState} from "../context/chatsState"
 function Home(props) {
 // console.log("home renderd")
 
@@ -9,9 +10,10 @@ function Home(props) {
 
   return (
     <>
+<ChatState>
     <Navbar/>
-    
       <ChatPage/>
+      </ChatState>
 </>
   )
 }

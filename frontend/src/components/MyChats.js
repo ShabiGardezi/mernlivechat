@@ -1,6 +1,35 @@
-import React from 'react'
+import React,{useContext,useState,useEffect} from 'react'
 import { Box, Text, Divider, Icon, HStack, Badge, Avatar } from '@chakra-ui/react'
+import { chatContext } from "../context/chatsState"
+
+
+
 function MyChats({ chat, _setselectedChat,selectedChat }) {
+ 
+  const { onlineUsers } = useContext(chatContext);
+  const [onlineStatus, setonlineStatus] = useState("Offline")
+  
+
+  useEffect(() => {
+   
+    const showStatus=()=>{
+      if(!chat.isGroupChat)
+       { const foundOnline=onlineUsers.includes(chat.users[0]._id);
+        if(foundOnline) setonlineStatus("Online")
+        else setonlineStatus("Offline")
+      }
+    }
+
+    showStatus();
+
+
+  }, [onlineUsers])
+  
+  const sliceLatestmsg=(msg)=>{
+         return  msg.slice(0,30)
+  }
+
+
     const date = "2/08/22"
     const CircleIcon = (props) => (
         <Icon viewBox='0 0 200 200' {...props}>
@@ -15,7 +44,7 @@ function MyChats({ chat, _setselectedChat,selectedChat }) {
         <>
            
             <Divider />
-              <Box  onClick={() => _setselectedChat(chat._id)}
+              <Box  cursor={"pointer"}  onClick={() => _setselectedChat(chat._id)}
                backgroundColor={selectedChat===chat._id? "blue.500":""}
                color={selectedChat===chat._id?"white":""}
                 _hover={{
@@ -46,10 +75,12 @@ function MyChats({ chat, _setselectedChat,selectedChat }) {
                    
                   </Box>
                   <Box>
-                    <HStack mt={"5px"}>
-                    <Box w="220px" > <Text fontStyle={"italic"}>{chat.latestMessage ? chat.latestMessage.messege : "Start a conversion..."}</Text></Box>
-                      <CircleIcon boxSize="10px" color='green.500' />
-                      <Text fontSize={"12px"}>Online</Text>
+                    <HStack mt={"5px"} spacing="1">
+                    <Box w="220px" > <Text  fontStyle={"italic"}>
+                      {chat.latestMessage ? sliceLatestmsg(chat.latestMessage.messege) : "Start a conversion..."}
+                    </Text></Box>
+                     {!chat.isGroupChat? <><CircleIcon boxSize="10px" color={onlineStatus==="Online"?'green.500':'red.500'} />
+                      <Text fontSize={"12px"}>{onlineStatus}</Text></>:""}
                     </HStack>
                   </Box>
 
