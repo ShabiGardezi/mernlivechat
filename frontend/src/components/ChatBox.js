@@ -3,6 +3,7 @@ import { Box,  Flex, Text, Divider, Button,  Avatar, AvatarBadge, Input, AvatarG
 import {  AttachmentIcon } from '@chakra-ui/icons'
 import axios from "axios"
 import { chatContext } from "../context/chatsState"
+import { messegeContext } from "../context/messegeState"
 import GroupInfomodal from './GroupInfomodal'
 
 // var socket = 0;
@@ -11,9 +12,9 @@ function ChatBox({ selectedChat }) {
     // console.log("chat box render");
     
     const toast = useToast();
-    const [messages, setmessages] = useState([])
+
     const { user, chats, updateChats,socket,roomjoined,onlineUsers } = useContext(chatContext);
-   
+    const { messages,_setmessages } = useContext(messegeContext);
     const [chatInfo, setchatInfo] = useState()
     
     const [onlineStatus, setonlineStatus] = useState("Offline")
@@ -28,61 +29,7 @@ function ChatBox({ selectedChat }) {
     
 
 
-    useEffect(() => {
-
-       
-
-        socket.on("message received", (msg) => {
-            
-            if (selectedChat !== msg.chat._id) {
-                // handle notifications
-                let index = chats.findIndex((e) => {
-                    return e._id === msg.chat._id
-                })
-                console.log(index);
-                if (index !== -1) {
-                    console.log(msg);
-                    console.log("ind")
-                    const newState = chats.map(element => {
-                        if (element._id === msg.chat._id) {
-                            const counter = element.unReadmessages + 1;
-                            return { ...element, unReadmessages: counter }
-
-                        }
-
-                        return element
-                    });
-                    updateChats(newState);
-
-
-                }
-                else {
-                    console.log("chat not found. creatting a new chat");
-                    console.log(msg);
-                    let newchat = {
-                        _id: msg.chat._id,
-                        users: [...msg.chat.users],// make deep 
-                        chatName: msg.chat.chatName,
-                        isGroupChat: msg.chat.isGroupChat,
-                        groupAdmin: msg.chat.groupAdmin ? msg.chat.groupAdmin : "Default",
-                        unReadmessages: 1
-                    }
-                    updateChats([...chats, newchat]);
-                }
-
-            }
-            else {
-
-                setmessages([...messages, msg])
-            }
-
-        })
-
-
-       
-
-        return () => socket.off("message received");
-    })
+    
 
 
     useEffect(() => {
@@ -101,15 +48,41 @@ function ChatBox({ selectedChat }) {
             axios.get(`http://localhost:5000/api/fetchmessages/${selectedChat}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
                 .then(res => {
                     if (res.data.success) {
-                        setmessages(res.data.payload);
+                        _setmessages(res.data.payload);
                        
                     }
                 })
         }
         fetchMessages();
 
+
+
+
 // eslint-disable-next-line
     }, [selectedChat]);
+
+useEffect(() => {
+ 
+if(chatInfo){
+    if(chatInfo.unReadmessages!==0){
+        console.log("runs")
+        const newState = chats.map(element => {
+            if (element._id === chatInfo._id) {
+                const counter = 0;
+                return { ...element, unReadmessages:counter }
+
+            }
+
+            return element
+        });
+        // console.log(newState);
+        updateChats(newState);
+    }
+}
+
+}, [chatInfo])
+
+
 
 
 
@@ -135,9 +108,21 @@ function ChatBox({ selectedChat }) {
         document.getElementById("msgInput").value = "";
         axios.post(`http://localhost:5000/api/sendmsg`, { chat_id: selectedChat, msg }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
             .then(res => {
-                console.log(res.data.payload)
+                // console.log(res.data.payload)
                 if (res.data.success) {
-                    setmessages([...messages, res.data.payload]);
+                    const msg=res.data.payload;
+                    _setmessages([...messages, res.data.payload]);
+                    const newState = chats.map(element => {
+                        if (element._id === msg.chat._id) {
+                            const counter = element.unReadmessages + 1;
+                            return { ...element, latestMessage:{messege:msg.messege,createdAt:msg.createdAt} }
+
+                        }
+
+                        return element
+                    });
+                    // console.log(newState);
+                    updateChats(newState);
                     if (socket.connected && roomjoined) {
 
                         socket.emit("new message", res.data.payload);
@@ -166,10 +151,11 @@ function ChatBox({ selectedChat }) {
            
 
             {/* message box start below */}
-            <Box h="100%" w={"70%"} px="12px" pt={"5px"}>
+            <Box h="100%"  w={"67%"} px="12px" pt={"5px"} border="1px"
+            >
 
 
-                <Flex w="100%">
+                <Flex w="100%" >
                     
                 {chatInfo?chatInfo.isGroupChat? 
                 <HStack cursor={"pointer"} onClick={()=>setshowModal(true)}>
@@ -250,7 +236,7 @@ function ChatBox({ selectedChat }) {
                         <Text>{element.messege}
 
                         </Text>
-                        <Text alignSelf={"end"} fontSize={["10px", "12px"]}>6:30 PM</Text>
+                        <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{element.createdAt}</Text>
                     </Flex>
 
 

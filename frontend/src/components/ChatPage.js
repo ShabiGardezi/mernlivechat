@@ -7,10 +7,11 @@ import MyChats from './MyChats';
 import ChatBox from './ChatBox';
 import Gmodal from './Gmodal';
 import bgimg from './3.gif'
+import {MessegeState} from "../context/messegeState"
 
 function ChatPage() {
 
-    const [selectedChat, setselectedChat] = useState()
+   
     const context = useContext(chatContext);
 
     useEffect(() => {
@@ -19,38 +20,21 @@ function ChatPage() {
         // eslint-disable-next-line
     }, [])// error in this line 
 
-    const _setselectedChat = (chat_id) => {
-
-        setselectedChat(chat_id);
-    }
+  
 
 
     return (
         <>
-            {/* <Heading textAlign={"center"}>My Chats</Heading>
-
-            <GroupChat></GroupChat>
-            <Container maxW='1000px'>
-                {context.chats.length > 0 ?
-
-                    context.chats.map((element, index) => {
-                        return (<MyChats key={index} chat={element} _setselectedChat={_setselectedChat} selectedChat={selectedChat} />);
-                    })
-                    : "No Chats Yet"}
-                <ChatBox selectedChat={selectedChat} />
-            </Container> */}
-
-
-
-
-
-            <Container maxW='1200px' h={"700"} mt="50px" p={0}>
-                <Flex h="100%" border='1px' >
+           <Container maxW="1400px" border={"1px"}>
+            <Container maxW='1200px' h={"700"} mt="50px" p={0}
+            >
+                <Flex h="100%"  justifyContent={"space-between"}>
 
  {/* My chats box start below */}
- <Box h="100%" w={"30%"} p={"5px"} >
+ <Box h="100%" flexBasis={"30%"} p={"5px"} minW={"360px"} borderRadius="8px"
+ boxShadow="2xl" overflowY={"hidden"}>
 
-<Box mb={"10px"}>
+<Box mb={"10px"} >
   <Heading
     mb={"10px"}>Chats</Heading>
   <Divider />
@@ -61,11 +45,11 @@ function ChatPage() {
 </Box >
 
 
-<Box w={"350px"} h={"82%"} borderRadius="lg" >
+<Box  h={"84%"} borderRadius="lg">
 {context.chats.length > 0 ?
 
 context.chats.map((element, index) => {
-    return (<MyChats key={index} chat={element} _setselectedChat={_setselectedChat} selectedChat={selectedChat} />);
+    return (<MyChats key={index} chat={element}  />);
 })
 : "No Chats Yet"}
 
@@ -75,8 +59,8 @@ context.chats.map((element, index) => {
 
 
 
-
-{selectedChat?<ChatBox selectedChat={selectedChat} />:<Box   bgImage={`url(${bgimg})`}
+<MessegeState>
+{context.selectedChat?<ChatBox  selectedChat={context.selectedChat} />:<Box   bgImage={`url(${bgimg})`}
        bgPosition="center"
        bgRepeat="no-repeat"
        bgSize={"cover"}
@@ -84,7 +68,7 @@ context.chats.map((element, index) => {
          <Heading mt={"40px"} color={"blue.400"} fontSize={"2rem"}>Select a Chat to Start Messaging</Heading>
       </Box>}
 
-
+      </MessegeState>
 
 
 
@@ -92,6 +76,7 @@ context.chats.map((element, index) => {
 
 
                 </Flex>
+            </Container>
             </Container>
         </>
     )

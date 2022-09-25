@@ -32,6 +32,7 @@ function SUprofile({name,img,_id,onClose}) {
     // const arr=[{...res.data.payload,name}]
     // changechats(arr);
     context.updateChats([res.data.payload,...context.chats])
+    // context.updateChats([...context.chats,res.data.payload])
     onClose();
 
   })

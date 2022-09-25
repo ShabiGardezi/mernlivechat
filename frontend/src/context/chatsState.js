@@ -7,11 +7,19 @@ export const chatContext = createContext();
 export const ChatState = (props) => {
 // console.log("charstate");
     const [chats, setchats] = useState([]);
+    const [selectedChat, setselectedChat] = useState()
     const [socket, setsocket] = useState(0);
     const [roomjoined, setroomjoined] = useState(false);
     const [onlineUsers, setonlineUsers] = useState([])
     const { user } = useContext(userContext);
-//    const user=JSON.parse(localStorage.getItem("user"));
+  
+
+
+const _setselectedChat = (chat_id) => {
+
+    setselectedChat(chat_id);
+}
+
 
 
    useEffect(() => {
@@ -27,7 +35,8 @@ export const ChatState = (props) => {
 
 
 useEffect(()=>{
-    // console.log(onlineUsers);
+    console.log(onlineUsers);
+    console.log(chats)
 if(socket)
    { 
     socket.on("user joined the room", ({user_id,onlineUsers}) => {
@@ -37,7 +46,7 @@ if(socket)
     })
 
     socket.on("i am online",(user_id)=>{
-        console.log("i am online")
+      
 
         setonlineUsers((pre)=>{
             return [...pre,user_id]
@@ -68,12 +77,16 @@ if(socket)
 
 
 
+
+
+
+
     const fetchChats=()=>{
 
         axios.get(`http://localhost:5000/api/getallchats`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
         .then(res => {
         //     console.log("fetchChats = ");
-          console.log(res.data.payload);
+        //   console.log(res.data.payload);
           setchats(res.data.payload)
 
         })
@@ -91,7 +104,7 @@ if(socket)
 
 
     return (
-        <chatContext.Provider value={{updateChats,fetchChats,chats,user,socket,roomjoined,onlineUsers}}>
+        <chatContext.Provider value={{updateChats,fetchChats,chats,user,socket,roomjoined,onlineUsers,selectedChat,_setselectedChat}}>
             {props.children}
         </chatContext.Provider>
     )

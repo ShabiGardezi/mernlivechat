@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 import {
   Box,
   Flex,
@@ -17,11 +17,25 @@ import {
 import {SearchIcon}  from "@chakra-ui/icons"
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import  SUModal  from './SUmodal';
-
+import {userContext} from "../context/userState"
 
 export default function Nav() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { user ,_setUser} = useContext(userContext);
+
+
+
+const handleLogout=()=>{
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  _setUser()
+}
+
+
+
+
+
   return (
     <>
     <SUModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
@@ -61,18 +75,19 @@ export default function Nav() {
                   <Center>
                     <Avatar
                       size={'2xl'}
-                      src={'https://avatars.dicebear.com/api/male/username.svg'}
+                      src={''}
+                      name={user.name}
                     />
                   </Center>
                   <br />
                   <Center>
-                    <p>Username</p>
+                    <p>{user.name}</p>
                   </Center>
                   <br />
-                  <MenuDivider />
-                  <MenuItem>Your Servers</MenuItem>
-                  <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
+                
+                 <Box  textAlign={"center"}>
+                  <Button  w="90%" onClick={handleLogout}  color={"white"} bgColor={"red.500"} _hover={{bgColor:"red.600" }}>Logout</Button>
+                  </Box>
                 </MenuList>
               </Menu>
             </Stack>

@@ -4,9 +4,9 @@ import { chatContext } from "../context/chatsState"
 
 
 
-function MyChats({ chat, _setselectedChat,selectedChat }) {
+function MyChats({ chat }) {
  
-  const { onlineUsers } = useContext(chatContext);
+  const { onlineUsers,selectedChat,_setselectedChat } = useContext(chatContext);
   const [onlineStatus, setonlineStatus] = useState("Offline")
   
 
@@ -15,7 +15,8 @@ function MyChats({ chat, _setselectedChat,selectedChat }) {
     const showStatus=()=>{
       if(!chat.isGroupChat)
        { const foundOnline=onlineUsers.includes(chat.users[0]._id);
-        if(foundOnline) setonlineStatus("Online")
+      
+        if(foundOnline) {setonlineStatus("Online");}
         else setonlineStatus("Offline")
       }
     }
@@ -23,7 +24,7 @@ function MyChats({ chat, _setselectedChat,selectedChat }) {
     showStatus();
 
 
-  }, [onlineUsers])
+  }, [onlineUsers,chat])
   
   const sliceLatestmsg=(msg)=>{
          return  msg.slice(0,30)
@@ -45,7 +46,7 @@ function MyChats({ chat, _setselectedChat,selectedChat }) {
            
             <Divider />
               <Box  cursor={"pointer"}  onClick={() => _setselectedChat(chat._id)}
-               backgroundColor={selectedChat===chat._id? "blue.500":""}
+               backgroundColor={selectedChat===chat._id? "#0078FF":""}
                color={selectedChat===chat._id?"white":""}
                 _hover={{
                   bgColor:selectedChat===chat._id?"":"blue.100"
