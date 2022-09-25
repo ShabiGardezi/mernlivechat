@@ -44,14 +44,15 @@ function MyChats({ chat }) {
     return (
         <>
            
-            <Divider />
+            
               <Box  cursor={"pointer"}  onClick={() => _setselectedChat(chat._id)}
                backgroundColor={selectedChat===chat._id? "#0078FF":""}
                color={selectedChat===chat._id?"white":""}
                 _hover={{
-                  bgColor:selectedChat===chat._id?"":"blue.100"
+                  // bgColor:selectedChat===chat._id?"":"blue.100",
+                  boxShadow:"3px 3px 20px 1px #888888"
                 }}
-                transition="background-color 0.2s,color 0.2s"
+                transition="background-color 0.2s,color 0.2s,box-shadow 0.3s"
                 borderRadius="8px"
                 justifyContent={"center"}
                 alignItems={"center"} w={"100%"} h={"80px"} display={"flex"}>
@@ -89,7 +90,7 @@ function MyChats({ chat }) {
                 </Box>
 
               </Box>
-              <Divider />
+              
         </>
     )
 }
