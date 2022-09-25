@@ -151,7 +151,8 @@ if(chatInfo){
            
 
             {/* message box start below */}
-            <Box h="100%"  w={"67%"} px="12px" pt={"5px"} border="1px"
+            <Box h="100%"  w={"67%"} px="12px" pt={"5px"}  border={"1px"} borderColor={"#ededed"}
+ boxShadow="2xl" borderRadius={"8px"}
             >
 
 

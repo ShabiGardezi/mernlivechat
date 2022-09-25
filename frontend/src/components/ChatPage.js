@@ -25,13 +25,13 @@ function ChatPage() {
 
     return (
         <>
-           <Container maxW="1400px" border={"1px"}>
+           <Container maxW="1400px" >
             <Container maxW='1200px' h={"700"} mt="50px" p={0}
             >
                 <Flex h="100%"  justifyContent={"space-between"}>
 
  {/* My chats box start below */}
- <Box h="100%" flexBasis={"30%"} p={"5px"} minW={"360px"} borderRadius="8px"
+ <Box h="100%" flexBasis={"30%"} p={"5px"} minW={"360px"} borderRadius="8px" border={"1px"} borderColor={"#ededed"}
  boxShadow="2xl" overflowY={"hidden"}>
 
 <Box mb={"10px"} >

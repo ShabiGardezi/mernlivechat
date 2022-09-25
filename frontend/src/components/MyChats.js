@@ -51,6 +51,7 @@ function MyChats({ chat }) {
                 _hover={{
                   bgColor:selectedChat===chat._id?"":"blue.100"
                 }}
+                transition="background-color 0.2s,color 0.2s"
                 borderRadius="8px"
                 justifyContent={"center"}
                 alignItems={"center"} w={"100%"} h={"80px"} display={"flex"}>
