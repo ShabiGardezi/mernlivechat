@@ -35,8 +35,8 @@ const _setselectedChat = (chat_id) => {
 
 
 useEffect(()=>{
-    console.log(onlineUsers);
-    console.log(chats)
+    // console.log(onlineUsers);
+    // console.log(chats)
 if(socket)
    { 
     socket.on("user joined the room", ({user_id,onlineUsers}) => {

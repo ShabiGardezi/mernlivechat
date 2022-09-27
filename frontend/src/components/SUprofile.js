@@ -43,7 +43,7 @@ function SUprofile({name,img,_id,onClose}) {
   
   
    <Box onClick={handleclick} borderRadius={"8px"} px="2" py={"1"} cursor={"pointer"} _hover={{backgroundColor:"blue.100"}} textAlign={"center"}>
-   <Avatar name={name} />
+   <Avatar name={name} src={img} />
    <Text> {name}</Text>
 </Box>
 </>

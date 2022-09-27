@@ -13,12 +13,14 @@ router.post("/", userExist, async (req, res) => {
             payload: "User with that email already exists.",
         });
     } else {
-        const { email, password,name } = req.body;
+        const { email, password,name,pic } = req.body;
+        // console.log(pic)
 // console.log(req.body);
         const newuser = new User({
             email,
             password,
-            name
+            name,
+            profileImage:pic.url
         });
         newuser.password = await bcrypt.hash(newuser.password, 10);
 

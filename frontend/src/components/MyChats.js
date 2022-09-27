@@ -1,17 +1,18 @@
 import React,{useContext,useState,useEffect} from 'react'
 import { Box, Text, Divider, Icon, HStack, Badge, Avatar } from '@chakra-ui/react'
 import { chatContext } from "../context/chatsState"
+import { userContext } from "../context/userState"
 
 
-
-function MyChats({ chat }) {
+function MyChats({ chat,index }) {
  
   const { onlineUsers,selectedChat,_setselectedChat } = useContext(chatContext);
+  const { user } = useContext(userContext);
   const [onlineStatus, setonlineStatus] = useState("Offline")
   
 
   useEffect(() => {
-   
+  
     const showStatus=()=>{
       if(!chat.isGroupChat)
        { const foundOnline=onlineUsers.includes(chat.users[0]._id);
@@ -50,7 +51,9 @@ function MyChats({ chat }) {
                color={selectedChat===chat._id?"white":""}
                 _hover={{
                   // bgColor:selectedChat===chat._id?"":"blue.100",
-                  boxShadow:"3px 3px 20px 1px #888888"
+                  boxShadow:"0px 0px 10px 0px #888888",
+                 
+                  
                 }}
                 transition="background-color 0.2s,color 0.2s,box-shadow 0.3s"
                 borderRadius="8px"
@@ -60,7 +63,7 @@ function MyChats({ chat }) {
                 <Box w={"19%"}>
                   {/* image box */}
 
-                  <Avatar name={chat.isGroupChat? chat.chatName:chat.users[0].name} size={"md"} src="{defaultimg}"></Avatar>
+                  <Avatar name={chat.isGroupChat? chat.chatName:chat.users[0].name} size={"md"} src={!chat.isGroupChat?chat.users[0].profileImage:""}></Avatar>
                 </Box>
                 <Box w={"79%"} >
                   <Box>

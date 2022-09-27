@@ -14,12 +14,14 @@ import {
 import {AddIcon} from "@chakra-ui/icons"
   import Gprofile from "./Gprofile"
   import {chatContext} from "../context/chatsState"
+  import { userContext } from "../context/userState"
+
 function GroupInfomodal({setshowModal,showModal,users,chatInfo}) {
   // console.log("render")
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [groupMembers, setgroupMembers] = useState([]);
     const context=useContext(chatContext);
-
+    const { user } = useContext(userContext);
 useEffect(() => {
   if(showModal)
   onOpen();
@@ -51,7 +53,7 @@ useEffect(() => {
     return <HStack key={i}>
     <Box  borderRadius={"8px"} px="2" py={"1"} cursor={"pointer"} _hover={{backgroundColor:"blue.100"}} textAlign={"center"}>
         <HStack>
-        <Avatar name= {e.name}></Avatar>
+        <Avatar name= {e.name} src={e.profileImage}></Avatar>
         <VStack spacing={0}>
         <Text>  {e.name}</Text>
        {chatInfo.groupAdmin===e._id? <Text fontWeight={"extrabold"} fontSize="12px">Admin</Text>:""}
@@ -64,7 +66,7 @@ useEffect(() => {
   <HStack >
     <Box  borderRadius={"8px"} px="2" py={"1"} cursor={"pointer"} _hover={{backgroundColor:"blue.100"}} textAlign={"center"}>
         <HStack>
-        <Avatar name= {context.user.name}></Avatar>
+        <Avatar name= {context.user.name} src={user.profileImage}></Avatar>
         <VStack spacing={0}>
         <Text>  {context.user.name}</Text>
        {chatInfo.groupAdmin===context.user._id? <Text fontWeight={"extrabold"} fontSize="12px">Admin</Text>:""}

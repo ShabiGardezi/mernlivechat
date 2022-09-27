@@ -15,7 +15,7 @@ router.get("/", authuser, async (req, res) => {
         try {
             
             const messages=await Message.find({chat:chat_id})
-            .populate("sender","name")
+            .populate("sender","name profileImage")
             .sort({createdAt:1});
             res.send({success: true, payload:messages})
 

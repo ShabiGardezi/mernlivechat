@@ -7,11 +7,11 @@ import axios from "axios"
 import { Link as routerLink, useNavigate } from "react-router-dom";
 import { useToast } from '@chakra-ui/react'
 
-
 export default function SignUp(props) {
     let navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [isloading, setisloading] = useState(false)
+    const [pic, setpic] = useState()
     const toast = useToast();
     const showtoast = ({ title, description, status, duration }) => {
         toast({
@@ -38,9 +38,9 @@ export default function SignUp(props) {
             const password = values.password;
             const name=values.fname+values.lname;
 
-            axios.post(`http://localhost:5000/api/createuser`, {name, email, password })
+            axios.post(`http://localhost:5000/api/createuser`, {name, email, password,pic })
                 .then(res => {
-                    // console.log(res.data);
+                    console.log(res.data);
                     setisloading(false);
 
                     if (res.data.success) 
@@ -64,8 +64,27 @@ export default function SignUp(props) {
                 });
         }
     })
+const apiKey="142577837761974";
+const cloudName="dld4hmoaj";
+const filesubmit=async()=>{
+    const data=new FormData();
+    data.append("file",document.getElementById("img").files[0]);
+    data.append("api_key",apiKey);
+    data.append("upload_preset","chat app")
 
 
+    const cloudinaryResponse = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, data, {
+    headers: { "Content-Type": "multipart/form-data" },
+    onUploadProgress: function (e) {
+      console.log(e.loaded / e.total)
+    }
+  })
+  console.log(cloudinaryResponse.data)
+  setpic({publicKey:cloudinaryResponse.data.public_id,
+    url:cloudinaryResponse.data.url,
+  })
+
+}
 
     return (
 
@@ -74,6 +93,7 @@ export default function SignUp(props) {
             align={'center'}
             justify={'center'}
             bg={useColorModeValue('gray.50', 'gray.800')}>
+                
             <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
                 <Stack align={'center'}>
                     <Heading fontSize={'4xl'} textAlign={'center'}>
@@ -89,6 +109,8 @@ export default function SignUp(props) {
                     boxShadow={'lg'}
                     p={8}>
                     <Stack spacing={4}>
+                        <Input onChange={filesubmit} type={"file"} id="img"></Input>
+                       
                         <form onSubmit={formik.handleSubmit}>
                             <HStack>
                                 <Box>

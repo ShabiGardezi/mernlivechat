@@ -28,8 +28,8 @@ router.post("/", authuser, async (req, res) => {
                  savedMessage=await Chat.populate(savedMessage,{path:"chat",select:"users chatName isGroupChat groupAdmin" }
                  
                  );
-                 savedMessage=await User.populate(savedMessage,{path:"chat.users", select:"name"});
-                 savedMessage=await User.populate(savedMessage,{path:"sender", select:"name"});
+                 savedMessage=await User.populate(savedMessage,{path:"chat.users", select:"name profileImage"});
+                 savedMessage=await User.populate(savedMessage,{path:"sender", select:"name profileImage"});
                  savedMessage=await User.populate(savedMessage,{path:"chat.groupAdmin", select:"name"});
                  
                 // savedMessage= await savedMessage.populate("sender").execPopulate();

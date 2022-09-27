@@ -1,4 +1,4 @@
-import {React,useState,useContext} from 'react'
+import {React,useState,useContext,useEffect} from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -9,14 +9,15 @@ import {
   ModalCloseButton,
   useDisclosure,
   Button,Text,Flex,Input,IconButton, Box, Avatar,Divider,useToast
- 
+ ,InputGroup,InputLeftElement
 } from '@chakra-ui/react'
-import {AddIcon} from "@chakra-ui/icons"
+import {AddIcon, SearchIcon} from "@chakra-ui/icons"
   import axios from 'axios';
   import Gprofile from "./Gprofile"
   import {chatContext} from "../context/chatsState"
 function Gmodal() {
   // console.log("render")
+  
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [searchUsers, setsearchUsers] = useState([])
     const [groupMembers, setgroupMembers] = useState([]);
@@ -46,14 +47,35 @@ const handleAddtogroup=({name,_id,img})=>{
 
 
 const handlesubmit=()=>{
-    axios.post(`http://localhost:5000/api/creategroupchat`, {users:groupMembers,chatName:"Friends"},{ headers: { token: JSON.parse(localStorage.getItem("token")) } })
+  const groupName=document.getElementById("groupName").value;
+  if(groupMembers.length>=2)
+  if(groupName)
+   { axios.post(`http://localhost:5000/api/creategroupchat`, {users:groupMembers,chatName:groupName},{ headers: { token: JSON.parse(localStorage.getItem("token")) } })
   .then(res => {
     console.log(res.data);
     if(res.data.success)
     context.updateChats([res.data.payload,...context.chats])
  onClose();
 
-  })
+  })}
+  else{
+    toast({
+      
+      description: "Group name cannot be empty",
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    })  
+  }
+  else{
+    toast({
+      
+      description: "Group must contain atleast 2 members",
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    })  
+  }
 }
 
 
@@ -76,18 +98,30 @@ const handlesubmit=()=>{
         <Button onClick={onOpen} borderRadius={"8px"} rightIcon={<AddIcon />} w="80%" h={"40px"} colorScheme="messenger">Create Group</Button>
 <Modal
   isCentered
-  onClose={()=>{setgroupMembers([]);onClose()}}
+  onClose={()=>{setgroupMembers([]);setsearchUsers([]);onClose()}}
   isOpen={isOpen}
   motionPreset='scale'
   size={"xl"}
 >
   <ModalOverlay />
   <ModalContent>
-    <ModalHeader>Search Users</ModalHeader>
+    <ModalHeader>Create Group</ModalHeader>
     <ModalCloseButton />
     <ModalBody>
-      <Input autoComplete="off" type={"search"} onChange={handlechange} id="search" variant='flushed' flexBasis={"85%"} placeholder="Search here" />
+<Flex justifyContent={"center"} mb="20px">
+    <Input id='groupName' autoComplete="off" type={"text"}  variant='outline' w={"60%"} placeholder=" Enter Group Name"  textAlign={"center"}/>
+    </Flex>
 
+
+    <InputGroup>
+    <InputLeftElement
+      pointerEvents='none'
+      children={<SearchIcon color='gray.300' />}
+    />
+    <Input autoComplete="off" type={"search"} onChange={handlechange} id="search" variant='flushed' flexBasis={"100%"} placeholder='Search Users' />
+  </InputGroup>
+
+     
        <Flex maxH={"240px"} overflowY="auto" flexWrap={"wrap"} mt="6px"  align="center" justifyContent={"center"}>
        {searchUsers.length > 0 ? searchUsers.map((element, index) => {
                 return <Gprofile handlesubmit={handlesubmit} handleAddtogroup={handleAddtogroup}  key={index} name={element.name} img={element.profileImage} _id={element._id}  />
@@ -99,12 +133,12 @@ const handlesubmit=()=>{
 
 
         </Flex> 
-        <Divider borderBottomWidth="3px" color="black" mt="5" />
-        <Text>Selected Users</Text>
+        {groupMembers.length>0?<> <Divider borderBottomWidth="3px" color="black" mt="5" />
+        <Text>Selected Members</Text> </>:""}
         <Flex borderRadius={"8px"}  maxH={"240px"} overflowY="auto" flexWrap={"wrap"} mt="6px"  align="center">
           {groupMembers?groupMembers.map((e,i)=>{
             return (<Box key={i} borderRadius={"8px"} px="2" py={"1"} cursor={"pointer"} _hover={{backgroundColor:"blue.100"}} textAlign={"center"}>
-            <Avatar name= {e.name}></Avatar>
+            <Avatar name= {e.name} src={e.img}></Avatar>
             <Text>  {e.name}</Text>
         </Box> )
           }):""}

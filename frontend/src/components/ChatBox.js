@@ -97,7 +97,7 @@ if(chatInfo){
           }}
         }
     
-        showStatus();
+        showStatus()
     
     
       }, [onlineUsers,chatInfo])
@@ -108,7 +108,7 @@ if(chatInfo){
         document.getElementById("msgInput").value = "";
         axios.post(`http://localhost:5000/api/sendmsg`, { chat_id: selectedChat, msg }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
             .then(res => {
-                // console.log(res.data.payload)
+                console.log(res.data.payload)
                 if (res.data.success) {
                     const msg=res.data.payload;
                     _setmessages([...messages, res.data.payload]);
@@ -144,8 +144,25 @@ if(chatInfo){
     }
  
    const [showModal, setshowModal] = useState(false)
-
-
+   function tConvert (time) {
+    // Check correct time format and split into components
+    time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+  
+    if (time.length > 1) { // If time format correct
+      time = time.slice (1);  // Remove full string match value
+      time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+      time[0] = +time[0] % 12 || 12; // Adjust hours
+    }
+    return time.join (''); // return adjusted time or original string
+  }
+ const gettime=(time)=>{
+    let t=tConvert(new Date(time).toLocaleTimeString())
+    let [h,m,s]=t.split(":")
+let [se,p]=s.split(" ")
+let ti=h+":"+m+" "+p;
+return ti;
+ }
+ 
     return (
         <>
            
@@ -163,7 +180,7 @@ if(chatInfo){
                     <GroupInfomodal users={chatInfo.users} showModal={showModal} setshowModal={setshowModal} chatInfo={chatInfo}/>
                 <AvatarGroup size='lg' max={2}>
                     {chatInfo?chatInfo.users.map((e,i)=>{
-                        return <Avatar key={i} name={e.name} src='' />
+                        return <Avatar key={i} name={e.name} src={e.profileImage} />
                     }):""}
                  <Avatar name={user.name} src='https://bit.ly/code-beast' />
                 
@@ -171,7 +188,7 @@ if(chatInfo){
               <Text fontSize="xl" fontWeight="bold">{chatInfo?chatInfo.chatName:"" }</Text>
                 </HStack>
                 :<>
-                <Avatar size="lg" name={chatInfo?chatInfo.users[0].name:"Loading" }src="">
+                <Avatar size="lg" name={chatInfo?chatInfo.users[0].name:"Loading" }src={chatInfo.users[0].profileImage}>
                 <AvatarBadge boxSize="1.25em" bg={onlineStatus==="Online"?'green.500':'red.500'} />
               </Avatar>
               <Flex flexDirection="column" mx="5" justify="center">
@@ -209,7 +226,7 @@ if(chatInfo){
                            pt="1"
                         >
                             <Text>{element.messege}</Text>
-                            <Text alignSelf={"end"} fontSize={["10px", "12px"]}>6:30 PM</Text>
+                            <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{gettime(element.createdAt)}</Text>
                         </Flex>
                     </Flex>
                     : 
@@ -217,7 +234,7 @@ if(chatInfo){
                      <Avatar
                         name={element.sender.name}
                         size={"sm"}
-                        src=""
+                        src={element.sender.profileImage}
                         
                       > </Avatar>
                       <Flex
@@ -237,7 +254,7 @@ if(chatInfo){
                         <Text>{element.messege}
 
                         </Text>
-                        <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{element.createdAt}</Text>
+                        <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{gettime(element.createdAt)}</Text>
                     </Flex>
 
 
@@ -268,7 +285,7 @@ if(chatInfo){
                                 border: "1px solid blue.400",
                             }}
                             id='msgInput'
-
+                            onKeyDown={(e)=>{if (e.key === 'Enter')handlesend()}}
 
                         />
 
@@ -277,7 +294,7 @@ if(chatInfo){
 
 
 
-                        <Button  onClick={handlesend} colorScheme={"messenger"} borderRadius="8px">Send</Button>
+                        <Button   onClick={handlesend} colorScheme={"messenger"} borderRadius="8px">Send</Button>
                     </Flex>
                 </Box>
 

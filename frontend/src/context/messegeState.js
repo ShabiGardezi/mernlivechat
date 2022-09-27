@@ -21,7 +21,7 @@ setmessages(msgArr);
       
 if(socket)
        { socket.on("message received", (msg) => {
-            
+            // console.log(msg)
             if (selectedChat !== msg.chat._id) {
                 // handle notifications
                 let index = chats.findIndex((e) => {
@@ -52,8 +52,10 @@ if(socket)
                         chatName: msg.chat.chatName,
                         isGroupChat: msg.chat.isGroupChat,
                         groupAdmin: msg.chat.groupAdmin ? msg.chat.groupAdmin : "Default",
-                        unReadmessages: 1
+                        unReadmessages: 1,
+                       
                     }
+                    // console.log(newchat)
                     updateChats([...chats, newchat]);
                 }
 

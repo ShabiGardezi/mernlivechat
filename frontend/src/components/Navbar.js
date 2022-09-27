@@ -39,7 +39,7 @@ const handleLogout=()=>{
   return (
     <>
     <SUModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} borderRadius="8px">
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <Box>
             <Flex align={"center"}>
@@ -67,7 +67,7 @@ const handleLogout=()=>{
                   minW={0}>
                   <Avatar
                     size={'sm'}
-                    src={'https://avatars.dicebear.com/api/male/username.svg'}
+                    src={user.profileImage}
                   />
                 </MenuButton>
                 <MenuList alignItems={'center'}>
@@ -75,7 +75,7 @@ const handleLogout=()=>{
                   <Center>
                     <Avatar
                       size={'2xl'}
-                      src={''}
+                      src={user.profileImage}
                       name={user.name}
                     />
                   </Center>

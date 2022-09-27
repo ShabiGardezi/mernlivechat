@@ -43,7 +43,7 @@ function Gprofile({name,img,_id,handleAddtogroup}) {
 
 
 <Box   onClick={()=>handleAddtogroup({_id,name,img})} borderRadius={"8px"} px="2" py={"1"} cursor={"pointer"} _hover={{backgroundColor:"blue.100"}} textAlign={"center"}>
-<Avatar name= {name}></Avatar>
+<Avatar name= {name} src={img}></Avatar>
 <Text>  {name}</Text>
 </Box>
   )
