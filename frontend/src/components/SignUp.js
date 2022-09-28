@@ -1,12 +1,12 @@
 import React from 'react'
-import { Flex, Box, FormControl, FormLabel, Input, InputGroup, HStack, InputRightElement, Stack, Button, Heading, Text, useColorModeValue,Link } from '@chakra-ui/react';
+import { Flex, Box, FormControl, FormLabel, Input, InputGroup, HStack, InputRightElement, Stack, Button, Heading, Text, useColorModeValue,Link,Center, Avatar ,AvatarBadge ,IconButton, } from '@chakra-ui/react';
 import { useState } from 'react';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { ViewIcon, ViewOffIcon,SmallCloseIcon } from '@chakra-ui/icons';
 import { useFormik } from "formik";
 import axios from "axios"
 import { Link as routerLink, useNavigate } from "react-router-dom";
 import { useToast } from '@chakra-ui/react'
-
+import { CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
 export default function SignUp(props) {
     let navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
@@ -33,6 +33,8 @@ export default function SignUp(props) {
         },
         onSubmit: (values) =>
          {
+            
+            console.log("in")
             setisloading(true);
             const email = values.email;
             const password = values.password;
@@ -64,9 +66,43 @@ export default function SignUp(props) {
                 });
         }
     })
+    const clickfileinput=()=>{
+        document.getElementById("img").click();
+    }
+    const [location, setlocation] = useState()
+    const [progress, setprogress] = useState(0);
+    const [uploading, setuploading] = useState(false)
 const apiKey="142577837761974";
 const cloudName="dld4hmoaj";
 const filesubmit=async()=>{
+
+  const file= document.getElementById("img").files[0]
+  if(file.size>1000000)
+  {
+    // size is greater than 1mb error
+    showtoast({
+        title: "SIZE ERROR",
+        description: " image size cannot be greater than 1mb",
+        status: "error",
+        duration: 5000
+    });
+    return
+  }
+  if(file.type!=="image/jpeg" && file.type!=="image/png" )
+  {
+    // format error
+    showtoast({
+        title: "FORMAT ERROR",
+        description: "only JPEG and PNG are allowed",
+        status: "error",
+        duration: 5000
+    });
+    return 
+  }
+//   console.log(file);
+//   console.log(URL.createObjectURL(file))
+  setlocation(URL.createObjectURL(file))
+  setuploading(true);
     const data=new FormData();
     data.append("file",document.getElementById("img").files[0]);
     data.append("api_key",apiKey);
@@ -76,13 +112,27 @@ const filesubmit=async()=>{
     const cloudinaryResponse = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, data, {
     headers: { "Content-Type": "multipart/form-data" },
     onUploadProgress: function (e) {
-      console.log(e.loaded / e.total)
+      
+        setprogress(Math.trunc((e.loaded / e.total)*100))
     }
   })
-  console.log(cloudinaryResponse.data)
-  setpic({publicKey:cloudinaryResponse.data.public_id,
-    url:cloudinaryResponse.data.url,
-  })
+  console.log(cloudinaryResponse)
+  if(cloudinaryResponse.status==200){
+      
+      setpic({publicKey:cloudinaryResponse.data.public_id,
+        url:cloudinaryResponse.data.url,
+      })
+      setuploading(false)
+      setprogress(0);
+  }
+  else{
+    showtoast({
+        title: "NETWORK ERROR OCCURED",
+        description: "error while uploading image",
+        status: "error",
+        duration: 8000
+    });
+  }
 
 }
 
@@ -109,7 +159,31 @@ const filesubmit=async()=>{
                     boxShadow={'lg'}
                     p={8}>
                     <Stack spacing={4}>
-                        <Input onChange={filesubmit} type={"file"} id="img"></Input>
+                       
+                    
+
+          <Stack direction={['column', 'row']} spacing={6}>
+            <Center >
+               
+              <Avatar id="avatar" size="xl" src={location} >
+               
+              </Avatar>
+            </Center>
+            <Center w="full">
+                <Input display={"none"} id="img"  onInput={filesubmit} type={"file"} ></Input>
+
+              <Button disabled={uploading} onClick={clickfileinput}  colorScheme={"red"} w="full">Upload profile image</Button>
+
+             {uploading? <CircularProgress value={progress} color='green.400'>
+  <CircularProgressLabel>{progress}</CircularProgressLabel>
+</CircularProgress>:""}
+            </Center>
+          </Stack>
+
+
+
+
+
                        
                         <form onSubmit={formik.handleSubmit}>
                             <HStack>
@@ -151,6 +225,7 @@ const filesubmit=async()=>{
                             </FormControl>
                             <Stack spacing={10} pt={2}>
                                 <Button
+                                disabled={uploading}
                                     loadingText="Creating Account"
                                     spinnerPlacement='end'
                                     isLoading={isloading ? true : false}

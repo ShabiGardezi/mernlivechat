@@ -18,7 +18,7 @@ function ChatBox({ selectedChat }) {
     const [chatInfo, setchatInfo] = useState()
     
     const [onlineStatus, setonlineStatus] = useState("Offline")
-
+const [typing, settyping] = useState(false)
 
     const AlwaysScrollToBottom = () => {
         const elementRef = useRef();
@@ -26,7 +26,40 @@ function ChatBox({ selectedChat }) {
         return <div ref={elementRef} />;
     };
 
+    const handlechange=(e)=>{
+             
+               if(e.target.value.length>0)
+               { 
+                if(typing)
+               { settyping(true);
+                socket.emit("typing",{typing,selectedChat})
+            }
+            
+            }
+               else
+               {
+                settyping(false);
+                socket.emit("typing",{typing,selectedChat})
+            
+            }
+    }
+
     
+useEffect(() => {
+  if(socket){
+
+    socket.on("typing",({typing,selectedChat})=>{
+        settyping(typing);
+    });
+   
+
+  }
+
+  return () => {
+    if(socket)
+  socket.off("typing");
+  }
+}, [socket])
 
 
     
@@ -277,6 +310,7 @@ return ti;
                 <Box h="53px" p={"6px"}>
                     <Flex w="100%" justifyContent={"space-between"} px="10px" >
                         <Input
+                            onChange={handlechange}
                             flexBasis={"84%"}
                             placeholder="Type Something..."
                             border="1px"
