@@ -68,6 +68,7 @@ const handleLogout=()=>{
                   <Avatar
                     size={'sm'}
                     src={user.profileImage}
+                    name={user.name}
                   />
                 </MenuButton>
                 <MenuList alignItems={'center'}>

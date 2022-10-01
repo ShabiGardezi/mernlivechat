@@ -8,7 +8,8 @@ export const MessegeState = (props) => {
   
     const [messages, setmessages] = useState([]);
     const { chats, updateChats,socket,selectedChat } = useContext(chatContext);
-
+    const [typing, settyping] = useState(false)
+    const [typingchats, settypingchats] = useState([])
 
 const _setmessages=(msgArr)=>{
 setmessages(msgArr);
@@ -22,6 +23,7 @@ setmessages(msgArr);
 if(socket)
        { socket.on("message received", (msg) => {
             // console.log(msg)
+            settyping(false);
             if (selectedChat !== msg.chat._id) {
                 // handle notifications
                 let index = chats.findIndex((e) => {
@@ -95,7 +97,7 @@ if(socket)
 
 
     return (
-        <messegeContext.Provider value={{messages,_setmessages}}>
+        <messegeContext.Provider value={{messages,_setmessages ,typing,settyping,typingchats, settypingchats}}>
             {props.children}
         </messegeContext.Provider>
     )

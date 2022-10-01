@@ -1,4 +1,4 @@
-import {useState,useContext} from 'react'
+import {useState,useContext,lazy,Suspense} from 'react'
 import './App.css';
 import Login from './components/Login';
 import Signup from './components/SignUp';
@@ -7,8 +7,9 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import Home from './components/Home';
+// import Home from './components/Home';
 import {userContext} from "./context/userState"
+const Home=lazy(()=>import("./components/Home"))
 
 
 function App() {
@@ -30,7 +31,12 @@ function App() {
      <>
     
      <Routes>
-    <Route path="/" element={<Home />} />
+      
+    <Route path="/" element={
+    <Suspense fallback="loading...">
+    <Home />
+    </Suspense>
+    } />
       </Routes>
     </>
       }

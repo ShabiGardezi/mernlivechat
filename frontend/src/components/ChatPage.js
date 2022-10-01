@@ -65,7 +65,7 @@ context.chats.map((element, index) => {
 
 
 <MessegeState>
-{context.selectedChat?<ChatBox  selectedChat={context.selectedChat} />
+{context.selectedChat?<ChatBox />
 :
 <Box   bgImage={`url(${bgimg})`}
        bgPosition="center"
