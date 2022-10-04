@@ -28,7 +28,7 @@ useEffect(() => {
 
  
 }, )
-
+// console.log(chatInfo.groupAdmin)
         
           return (
             <>
@@ -57,13 +57,14 @@ useEffect(() => {
         <VStack spacing={0}>
         <Text>  {e.name}</Text>
        {chatInfo.groupAdmin===e._id? <Text fontWeight={"extrabold"} fontSize="12px">Admin</Text>:""}
+       {/* {chatInfo.groupAdmin===e._id?<Text>e._id</Text>:<Text>err</Text>} */}
         </VStack>
         </HStack>
     </Box>
     </HStack>
 }):"No Members Found"}
   
-  <HStack >
+ <HStack >
     <Box  borderRadius={"8px"} px="2" py={"1"} cursor={"pointer"} _hover={{backgroundColor:"blue.100"}} textAlign={"center"}>
         <HStack>
         <Avatar name= {context.user.name} src={user.profileImage}></Avatar>

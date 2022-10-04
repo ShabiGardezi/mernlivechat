@@ -1,13 +1,13 @@
 import { createContext,useState,useEffect,useContext } from "react"
-
+import { userContext } from "../context/userState"
 import { chatContext } from "../context/chatsState"
 export const messegeContext = createContext();
 
 
 export const MessegeState = (props) => {
-  
+    const context= useContext(userContext);
     const [messages, setmessages] = useState([]);
-    const { chats, updateChats,socket,selectedChat } = useContext(chatContext);
+    const { chats, updateChats,socket,selectedChat,onlineUsers, setonlineUsers } = useContext(chatContext);
     const [typing, settyping] = useState(false)
     const [typingchats, settypingchats] = useState([])
 
@@ -47,17 +47,27 @@ if(socket)
                 }
                 else {
                     // console.log(msg);
+                    let newUsers=()=>{
+                        let newarr= msg.chat.users.filter((user)=>{
+                         return user._id!==context.user._id
+                        })         // make deep  
+                        
+                        return newarr
+                     }
                     let newchat = {
                         _id: msg.chat._id,
                         latestMessage:{messege:msg.messege,createdAt:msg.createdAt},
-                        users: [...msg.chat.users],// make deep 
+                        users:newUsers(),
                         chatName: msg.chat.chatName,
                         isGroupChat: msg.chat.isGroupChat,
-                        groupAdmin: msg.chat.groupAdmin ? msg.chat.groupAdmin : "Default",
+                        groupAdmin: msg.chat.groupAdmin ? msg.chat.groupAdmin._id : "Default",
                         unReadmessages: 1,
                        
                     }
                     // console.log(newchat)
+                    // if(!newchat.isGroupChat)
+                    // setonlineUsers([...onlineUsers,newchat.users[0]._id])
+
                     updateChats([...chats, newchat]);
                 }
 

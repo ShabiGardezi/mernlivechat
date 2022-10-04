@@ -101,7 +101,7 @@ useEffect(() => {
     else 
     settyping(false);
    
-console.log(typingchats)
+// console.log(typingchats)
  
 }, [typingchats])
 
@@ -130,10 +130,30 @@ console.log(typingchats)
 
             axios.get(`http://localhost:5000/api/fetchmessages/${selectedChat}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
                 .then(res => {
+                   
                     if (res.data.success) {
                         _setmessages(res.data.payload);
 
                     }
+                    else{
+                        toast({
+                            title: "ERROR OCCURED",
+                            description: res.data.payload,
+                            status: 'error',
+                            duration: 5000,
+                            isClosable: true,
+                        });
+                    }
+                }).catch(function (error){
+                    // console.log(error)
+                    _setmessages([]);
+
+                    toast({
+                        title:error.message,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    });
                 })
         }
         fetchMessages();
@@ -208,7 +228,15 @@ return ()=>{
 
 
     const handlesend = () => {
-        console.log(text)
+       if(text.length===0){
+        toast({
+            title: "Enter Something",
+            status: 'warning',
+            duration: 5000,
+            isClosable: true,
+        });
+        return 
+       }
         let msg=text;
         axios.post(`http://localhost:5000/api/sendmsg`, { chat_id: selectedChat, msg }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
             .then(res => {
@@ -243,6 +271,22 @@ return ()=>{
                         });
                     }
                 }
+                else{
+                    toast({
+                        title: "ERROR OCCURED",
+                        description: res.data.payload,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                }
+            }).catch(function(error){
+                toast({
+                    title: error.message,
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                });
             })
             settext("")
             setstartedTyping(false);

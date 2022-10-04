@@ -48,6 +48,7 @@ const io= require("socket.io")(server,{
   cors:{
     origin:"http://localhost:3000"
   }
+  
 })
 
 io.on("connection" ,(socket)=>{
@@ -71,6 +72,7 @@ next();
   });
 
   socket.on("setup",(user_id)=>{
+    
     socket.join(user_id);
     // let [temp,rooms]=socket.rooms
     // console.log(rooms)

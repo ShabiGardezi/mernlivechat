@@ -28,13 +28,27 @@ function SUprofile({name,img,_id,onClose}) {
 
   axios.post(`http://localhost:5000/api/accesschat`, {user_id:_id},{ headers: { token: JSON.parse(localStorage.getItem("token")) } })
   .then(res => {
-    // console.log(res.data);
-    // const arr=[{...res.data.payload,name}]
-    // changechats(arr);
-    context.updateChats([res.data.payload,...context.chats])
-    // context.updateChats([...context.chats,res.data.payload])
-    onClose();
+    if(res.data.success)
+   { context.updateChats([res.data.payload,...context.chats])
+    
+    onClose();}
+    else{
+      toast({
+        title: "ERROR OCCURED",
+        description: res.data.payload,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+    });
+    }
 
+  }).catch(function(error){
+    toast({
+      title: error.message,
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+  });
   })
  }
 

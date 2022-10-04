@@ -34,11 +34,11 @@ export default function SignUp(props) {
         onSubmit: (values) =>
          {
             
-            console.log("in")
+           
             setisloading(true);
             const email = values.email;
             const password = values.password;
-            const name=values.fname+values.lname;
+            const name=values.fname+" "+values.lname;
 
             axios.post(`http://localhost:5000/api/createuser`, {name, email, password,pic })
                 .then(res => {
@@ -63,6 +63,13 @@ export default function SignUp(props) {
                             duration: 8000
                         });
                     }
+                }).catch(function(error){
+                    toast({
+                        title: error.message,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    });
                 });
         }
     })
@@ -116,7 +123,7 @@ const filesubmit=async()=>{
         setprogress(Math.trunc((e.loaded / e.total)*100))
     }
   })
-  console.log(cloudinaryResponse)
+//   console.log(cloudinaryResponse)
   if(cloudinaryResponse.status==200){
       
       setpic({publicKey:cloudinaryResponse.data.public_id,

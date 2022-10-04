@@ -2,6 +2,7 @@ import { createContext,useState,useEffect,useContext } from "react"
 import axios from "axios"
 import io from "socket.io-client"
 import { userContext } from "../context/userState"
+import { useToast } from '@chakra-ui/react'
 export const chatContext = createContext();
 
 export const ChatState = (props) => {
@@ -11,8 +12,10 @@ export const ChatState = (props) => {
     const [socket, setsocket] = useState(0);
     const [roomjoined, setroomjoined] = useState(false);
     const [onlineUsers, setonlineUsers] = useState([])
-    const { user } = useContext(userContext);
-  
+    const { user,loadingscreen, setloadingscreen } = useContext(userContext);
+    const [progress, setprogress] = useState(0)
+    const toast = useToast();
+   
 
 
 const _setselectedChat = (chat_id) => {
@@ -39,6 +42,11 @@ useEffect(()=>{
     // console.log(chats)
 if(socket)
    { 
+
+    socket.on("connect", () => {
+        // console.log("connected") reconnected feature has to be implemnented in future
+      });
+
     socket.on("user joined the room", ({user_id,onlineUsers}) => {
         setroomjoined(true);
         setonlineUsers(onlineUsers);
@@ -59,36 +67,73 @@ if(socket)
         setonlineUsers(newarr)
 
     })
-    // socket.on("disconnect", (reason) => {
-    //     console.log(reason);
-    //     // socket.disconnect();
-    //   });
+    socket.on("disconnect", (reason) => {
+        console.log(reason);
+        // setonlineUsers([]);
+        // socket.disconnect();
+      });
 }
 
     return ()=>{
         if(socket)
        { socket.off("user joined the room");
         socket.off("i am online");
-        socket.off("user has left");}
+        socket.off("user has left");
+    socket.off("connect");
+}
         };
 
 })
 
 
+useEffect(() => {
+  fetchChats();
 
 
+}, [])
+
+useEffect(() => {
+    let timer
+    if(progress===100)
+   { timer = setTimeout(() => {
+        setloadingscreen(false);
+      }, 1000);}
+
+
+      return () => clearTimeout(timer);
+  
+  }, [progress])
 
 
 
 
     const fetchChats=()=>{
 
-        axios.get(`http://localhost:5000/api/getallchats`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+        axios.get(`http://localhost:5000/api/getallchats`, { headers: { token: JSON.parse(localStorage.getItem("token")) }
+    ,
+    onDownloadProgress: function (e) {
+      console.log(Math.trunc((e.loaded / e.total)*100))
+        setprogress(Math.trunc((e.loaded / e.total)*100))
+    } })
         .then(res => {
-        //     console.log("fetchChats = ");
-        //   console.log(res.data.payload);
-          setchats(res.data.payload)
+        if(res.data.success)
+         { 
+            setchats(res.data.payload)
+            // setloadingscreen(false);
+        //     setTimeout(() => {
+        //         setloadingscreen(false);
+                
+        // }, 1000);
+        }
+        
 
+        }).catch(function(error){
+            toast({
+                title:error.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
         })
         
     }
@@ -104,7 +149,7 @@ if(socket)
 
 
     return (
-        <chatContext.Provider value={{updateChats,fetchChats,chats,user,socket,roomjoined,onlineUsers,selectedChat,_setselectedChat}}>
+        <chatContext.Provider value={{updateChats,fetchChats,chats,user,socket,roomjoined,onlineUsers,selectedChat,_setselectedChat,progress}}>
             {props.children}
         </chatContext.Provider>
     )

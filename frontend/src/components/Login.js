@@ -52,6 +52,13 @@ function Login(props) {
               duration: 8000
           });
           }
+        }).catch(function(error){
+          toast({
+            title: error.message,
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+        });
         });
     }
   })

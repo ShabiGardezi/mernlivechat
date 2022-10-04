@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 // import Home from './components/Home';
 import {userContext} from "./context/userState"
+import Loader from './components/Loader';
 const Home=lazy(()=>import("./components/Home"))
 
 
@@ -33,7 +34,7 @@ function App() {
      <Routes>
       
     <Route path="/" element={
-    <Suspense fallback="loading...">
+    <Suspense fallback={<Loader></Loader> } >
     <Home />
     </Suspense>
     } />

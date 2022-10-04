@@ -20,7 +20,7 @@ router.post("/", userExist, async (req, res) => {
             email,
             password,
             name,
-            profileImage:pic.url
+            profileImage:pic?pic.url:""
         });
         newuser.password = await bcrypt.hash(newuser.password, 10);
 

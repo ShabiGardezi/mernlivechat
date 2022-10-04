@@ -52,12 +52,32 @@ const handlesubmit=()=>{
   if(groupName)
    { axios.post(`http://localhost:5000/api/creategroupchat`, {users:groupMembers,chatName:groupName},{ headers: { token: JSON.parse(localStorage.getItem("token")) } })
   .then(res => {
-    console.log(res.data);
+    // console.log(res.data);
     if(res.data.success)
-    context.updateChats([res.data.payload,...context.chats])
+   { context.updateChats([res.data.payload,...context.chats])
+    setgroupMembers([]);
+    setsearchUsers([])
  onClose();
+}
+else{
+  toast({
+    title: "ERROR OCCURED",
+    description: res.data.payload,
+    status: 'error',
+    duration: 5000,
+    isClosable: true,
+});
+}
+  }).catch(function(error){
+    toast({
+      title:error.message,
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+  });
+  })
 
-  })}
+}
   else{
     toast({
       
@@ -88,7 +108,24 @@ const handlesubmit=()=>{
         axios.get(`http://localhost:5000/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
           .then(res => {
             // console.log(res.data);
+            if(res.data.success)
             setsearchUsers(res.data.payload);
+            else{
+              toast({
+                title: "ERROR OCCURED",
+                description: res.data.payload,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            }
+          }).catch(function(error){
+            toast({
+              title: error.message,
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+          });
           })
       }
     }

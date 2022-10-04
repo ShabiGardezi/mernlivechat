@@ -14,11 +14,11 @@ function ChatPage() {
    
     const context = useContext(chatContext);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        context.fetchChats();
-        // eslint-disable-next-line
-    }, [])// error in this line 
+    //     context.fetchChats();
+    //     // eslint-disable-next-line
+    // }, [])// error in this line 
 
   
 
@@ -45,7 +45,7 @@ function ChatPage() {
 </Box >
 
 
-<Box  h={"84%"} borderRadius="lg">
+<Box  h={"84%"} borderRadius="lg" overflowY={"auto"}>
 {context.chats.length > 0 ?
 
 context.chats.map((element, index) => {
@@ -72,7 +72,7 @@ context.chats.map((element, index) => {
        bgRepeat="no-repeat"
        borderRadius={"8px"}
        bgSize={"cover"}
-       h="100%" bgColor={"red"} w={"67%"} display="flex" justifyContent={"center"} alignItems="start">
+       h="100%" bgColor={"grey"} w={"67%"} display="flex" justifyContent={"center"} alignItems="start">
          <Heading mt={"40px"} color={"blue.400"} fontSize={"2rem"}>Select a Chat to Start Messaging</Heading>
       </Box>}
 

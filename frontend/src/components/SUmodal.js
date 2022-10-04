@@ -7,8 +7,7 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
-    useDisclosure,
-    Button,Text,Flex,Input,IconButton, Box, Avatar,Divider
+    Flex,Input,useToast
    
   } from '@chakra-ui/react'
   import axios from 'axios';
@@ -19,7 +18,7 @@ import SUprofile from './SUprofile';
 function SUModal({isOpen, onOpen, onClose}) {
     // const { isOpen, onOpen, onClose } = useDisclosure()
     const [searchUsers, setsearchUsers] = useState([])
-
+    const toast = useToast();
 
   const handlechange = (e) => {
     const searchtext = e.target.value;
@@ -30,7 +29,24 @@ function SUModal({isOpen, onOpen, onClose}) {
       axios.get(`http://localhost:5000/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
         .then(res => {
           // console.log(res.data);
+          if(res.data.success)
           setsearchUsers(res.data.payload);
+          else{
+            toast({
+              title: "ERROR OCCURED",
+              description: res.data.payload,
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+          });
+          }
+        }).catch(function(error){
+          toast({
+            title: error.message,
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+        });
         })
     }
   }
