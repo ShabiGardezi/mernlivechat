@@ -10,7 +10,7 @@ export const MessegeState = (props) => {
     const { chats, updateChats,socket,selectedChat,onlineUsers, setonlineUsers } = useContext(chatContext);
     const [typing, settyping] = useState(false)
     const [typingchats, settypingchats] = useState([])
-
+    // const [showloading, setshowloading] = useState(true)
 const _setmessages=(msgArr)=>{
 setmessages(msgArr);
 }

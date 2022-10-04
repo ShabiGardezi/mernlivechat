@@ -1,26 +1,29 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
-import { Box, Flex, Text, Divider, Button, Avatar, AvatarBadge, Input, AvatarGroup, IconButton, useToast, Center, HStack ,Image} from '@chakra-ui/react'
+import { Box, Flex, Text, Divider, Button, Avatar, AvatarBadge, Input, AvatarGroup, IconButton, useToast, Center, HStack, Image, Progress, VStack } from '@chakra-ui/react'
 import { AttachmentIcon } from '@chakra-ui/icons'
 import axios from "axios"
 import { chatContext } from "../context/chatsState"
 import { messegeContext } from "../context/messegeState"
 import GroupInfomodal from './GroupInfomodal'
 import typeloader from "./Vanilla-1s-183px.png"
-
+import Loader from "./Loader"
+import LoadingBar from 'react-top-loading-bar'
+import ImageModal from './ImageModal'
 // var socket = 0;
 function ChatBox() {
 
     // console.log("chat box render");
 
     const toast = useToast();
-
-    const { user, chats, updateChats, socket, roomjoined, onlineUsers,selectedChat } = useContext(chatContext);
-    const { messages, _setmessages,typing,settyping,typingchats, settypingchats } = useContext(messegeContext);
+    const [progress, setprogress] = useState(0)
+    const [progress2, setProgress2] = useState(0)
+    const { user, chats, updateChats, socket, roomjoined, onlineUsers, selectedChat } = useContext(chatContext);
+    const { messages, _setmessages, typing, settyping, typingchats, settypingchats } = useContext(messegeContext);
     const [chatInfo, setchatInfo] = useState()
     const [text, settext] = useState("")
-
+    const [showloading, setshowloading] = useState(true)
     const [onlineStatus, setonlineStatus] = useState("Offline")
-  
+
     const [startedTyping, setstartedTyping] = useState(false)
 
     const AlwaysScrollToBottom = () => {
@@ -31,27 +34,26 @@ function ChatBox() {
 
     const handlechange = (e) => {
         settext(e.target.value);
-        if(!chatInfo.isGroupChat)
-        if (e.target.value.length > 0) {
-          
-            if(startedTyping===false)
-               { 
-            //     console.log("selected chat: "+selectedChat)
-            //    console.log("user id: "+chatInfo.users[0]._id)
-            
-                setstartedTyping(true);
-                socket.emit("typing", { typing:true,chat_id: selectedChat ,user_id:chatInfo.users[0]._id})
-                // console.log("typing")
+        if (!chatInfo.isGroupChat)
+            if (e.target.value.length > 0) {
+
+                if (startedTyping === false) {
+                    //     console.log("selected chat: "+selectedChat)
+                    //    console.log("user id: "+chatInfo.users[0]._id)
+
+                    setstartedTyping(true);
+                    socket.emit("typing", { typing: true, chat_id: selectedChat, user_id: chatInfo.users[0]._id })
+                    // console.log("typing")
+                }
+
+
             }
-            
+            else {
+                setstartedTyping(false);
+                socket.emit("typing", { typing: false, chat_id: selectedChat, user_id: chatInfo.users[0]._id })
+                // console.log("stoped typing")
 
-        }
-        else {
-            setstartedTyping(false);
-            socket.emit("typing", { typing:false,chat_id: selectedChat,user_id:chatInfo.users[0]._id})
-            // console.log("stoped typing")
-
-        }
+            }
     }
 
 
@@ -61,8 +63,8 @@ function ChatBox() {
             socket.on("starttyping", ({ typing, chat_id }) => {
                 // console.log(chat_id)
                 // console.log(selectedChat)
-                settypingchats((pre)=>{
-                    return [...pre,chat_id]
+                settypingchats((pre) => {
+                    return [...pre, chat_id]
                 });
 
                 // if(chat_id===selectedChat)
@@ -72,13 +74,13 @@ function ChatBox() {
             });
 
             socket.on("stoptyping", ({ typing, chat_id }) => {
-                settypingchats((pre)=>{
-                    
-                    return  pre.filter((id)=>{
-                      return id!== chat_id
+                settypingchats((pre) => {
+
+                    return pre.filter((id) => {
+                        return id !== chat_id
                     });
                 });
-                
+
                 // if(chat_id===selectedChat)
                 // { console.log("stop typing")
                 //     settyping(typing);
@@ -89,33 +91,35 @@ function ChatBox() {
         }
 
         return () => {
-            if (socket)
-               { socket.off("starttyping");
-                socket.off("stoptyping");}
+            if (socket) {
+                socket.off("starttyping");
+                socket.off("stoptyping");
+            }
         }
     }, [socket])
 
-useEffect(() => {
-    if(typingchats.includes(selectedChat))
-    settyping(true);
-    else 
-    settyping(false);
-   
-// console.log(typingchats)
- 
-}, [typingchats])
+    useEffect(() => {
+        if (typingchats.includes(selectedChat))
+            settyping(true);
+        else
+            settyping(false);
+
+        console.log(typingchats)
+
+    }, [typingchats])
 
 
 
     useEffect(() => {
         // console.log("selectedchat: "+selectedChat)
        
+        setshowloading(true)
         settext("");
         setstartedTyping(false);
-        if(typingchats.includes(selectedChat))
-        settyping(true)
+        if (typingchats.includes(selectedChat))
+            settyping(true)
         else
-        settyping(false)
+            settyping(false)
         const getChatinfo = () => {
 
             const chat = chats.find((e) => {
@@ -130,12 +134,13 @@ useEffect(() => {
 
             axios.get(`http://localhost:5000/api/fetchmessages/${selectedChat}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
                 .then(res => {
-                   
+
                     if (res.data.success) {
                         _setmessages(res.data.payload);
-
+                        setshowloading(false)
                     }
-                    else{
+                    else {
+                        _setmessages([]);
                         toast({
                             title: "ERROR OCCURED",
                             description: res.data.payload,
@@ -144,12 +149,12 @@ useEffect(() => {
                             isClosable: true,
                         });
                     }
-                }).catch(function (error){
+                }).catch(function (error) {
                     // console.log(error)
                     _setmessages([]);
 
                     toast({
-                        title:error.message,
+                        title: error.message,
                         status: 'error',
                         duration: 5000,
                         isClosable: true,
@@ -160,29 +165,30 @@ useEffect(() => {
 
 
 
-return ()=>{
-    // console.log("previos selectedchat: "+selectedChat)
-    // console.log(startedTyping)
-//    const getuser=(selectedChat)=>{
-//           let chat= chats.find((chat)=>{
-//             return chat._id===selectedChat
-//            })
-//            if(chat)
-//            return chat.users[0]._id
-//    }
-//    console.log("typing: "+startedTyping)
-//     if(socket)
-//     if(startedTyping)
-//    { console.log("inside")
-//     socket.emit("typing", { typing:false, selectedChat,user_id:getuser(selectedChat) });}// very big bug here: cleanup is one step behind
-           
-}
+        return () => {
+        
+            // console.log("previos selectedchat: "+selectedChat)
+            // console.log(startedTyping)
+            //    const getuser=(selectedChat)=>{
+            //           let chat= chats.find((chat)=>{
+            //             return chat._id===selectedChat
+            //            })
+            //            if(chat)
+            //            return chat.users[0]._id
+            //    }
+            //    console.log("typing: "+startedTyping)
+            //     if(socket)
+            //     if(startedTyping)
+            //    { console.log("inside")
+            //     socket.emit("typing", { typing:false, selectedChat,user_id:getuser(selectedChat) });}// very big bug here: cleanup is one step behind
+
+        }
         // eslint-disable-next-line
     }, [selectedChat]);
 
     useEffect(() => {
-//     if(chatInfo)
-// {console.log(chatInfo)}
+        //     if(chatInfo)
+        // {console.log(chatInfo)}
         if (chatInfo) {
             if (chatInfo.unReadmessages !== 0) {
                 // console.log("runs")
@@ -199,10 +205,10 @@ return ()=>{
                 updateChats(newState);
             }
         }
-return ()=>{
-    // console.log("previous chatinfo")
-    // console.log(chatInfo)
-}
+        return () => {
+            // console.log("previous chatinfo")
+            // console.log(chatInfo)
+        }
     }, [chatInfo])
 
 
@@ -225,25 +231,36 @@ return ()=>{
 
 
     }, [onlineUsers, chatInfo])
+    // useEffect(() => {
+    //     if (progress === 100)
+    //         setprogress(0);
+
+    // }, [progress])
 
 
     const handlesend = () => {
-       if(text.length===0){
-        toast({
-            title: "Enter Something",
-            status: 'warning',
-            duration: 5000,
-            isClosable: true,
-        });
-        return 
-       }
-        let msg=text;
+        if (text.length === 0) {
+            toast({
+                title: "Enter Something",
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            });
+            return
+        }
+        // setprogress(20);
+        setProgress2(20);
+        let msg = text;
         axios.post(`http://localhost:5000/api/sendmsg`, { chat_id: selectedChat, msg }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
             .then(res => {
                 // console.log(res.data.payload)
                 if (res.data.success) {
+                    // setprogress(60)
+                    setProgress2(60);
                     const msg = res.data.payload;
                     _setmessages([...messages, res.data.payload]);
+                    // setprogress(90)
+                    setProgress2(90);
                     const newState = chats.map(element => {
                         if (element._id === msg.chat._id) {
                             const counter = element.unReadmessages + 1;
@@ -254,7 +271,10 @@ return ()=>{
                         return element
                     });
                     // console.log(newState);
+                    // setprogress(100)
+                    setProgress2(100);
                     updateChats(newState);
+                    // setprogress(0);
                     if (socket.connected && roomjoined) {
 
                         socket.emit("new message", res.data.payload);
@@ -271,7 +291,8 @@ return ()=>{
                         });
                     }
                 }
-                else{
+                else {
+                    // setprogress(0);
                     toast({
                         title: "ERROR OCCURED",
                         description: res.data.payload,
@@ -280,7 +301,8 @@ return ()=>{
                         isClosable: true,
                     });
                 }
-            }).catch(function(error){
+            }).catch(function (error) {
+                // setprogress(0);
                 toast({
                     title: error.message,
                     status: 'error',
@@ -288,9 +310,11 @@ return ()=>{
                     isClosable: true,
                 });
             })
-            settext("")
-            setstartedTyping(false);
-            // socket.emit("typing", { typing:false, selectedChat ,user_id:user._id})
+        settext("")
+        setstartedTyping(false);
+        if (!chatInfo.isGroupChat) {
+            socket.emit("typing", { typing: false, chat_id: selectedChat, user_id: chatInfo.users[0]._id })
+        }
 
     }
 
@@ -356,111 +380,145 @@ return ()=>{
                 <Divider borderBottomWidth="3px" color="black" mt="5" />
 
 
-                <Flex w="100%" h="80%" overflowY="auto" flexDirection="column" p="3">
+                {!showloading ?
+                    <><Flex w="100%" h="80%" overflowY="auto" flexDirection="column" p="3">
 
 
 
-                    {messages.length > 0 ? messages.map((element, index) => {
-                        return (
-                            user._id === element.sender._id ? <Flex w="100%" key={index} justify="flex-end">
-                                <Flex
-
-                                    flexDirection={"column"}
-                                    position="relative"
-                                    bg="#0078FF"
-                                    color="white"
-                                    minW="100px"
-                                    maxW="350px"
-                                    borderRadius={"8px"}
-                                    my="1"
-                                    // p="3"
-                                    px={"3"}
-                                    pt="1"
-                                >
-                                    <Text>{element.messege}</Text>
-                                    <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{gettime(element.createdAt)}</Text>
-                                </Flex>
-                            </Flex>
-                                :
-                                <Flex w="100%" key={index} >
-                                    <Avatar
-                                        name={element.sender.name}
-                                        size={"sm"}
-                                        src={element.sender.profileImage}
-
-                                    > </Avatar>
+                        {messages.length > 0 ? messages.map((element, index) => {
+                            return (
+                                user._id === element.sender._id ? <Flex w="100%" key={index} justify="flex-end">
                                     <Flex
-                                        ml={"5px"}
+
                                         flexDirection={"column"}
-                                        bg="gray.100"
-                                        color="black"
-                                        borderRadius={"8px"}
+                                        position="relative"
+                                        bg="#0078FF"
+                                        color="white"
                                         minW="100px"
                                         maxW="350px"
-                                        px={"3"}
-                                        pt={chatInfo ? chatInfo.isGroupChat ? "" : "1" : ""}
+                                        borderRadius={"8px"}
                                         my="1"
-
+                                        // p="3"
+                                        px={"3"}
+                                        pt="1"
                                     >
-                                        {chatInfo ? chatInfo.isGroupChat ? <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{element.sender.name}</Text> : "" : ""}
-                                        <Text>{element.messege}
-
-                                        </Text>
+                                        <Text>{element.messege}</Text>
                                         <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{gettime(element.createdAt)}</Text>
                                     </Flex>
-
-
                                 </Flex>
-                        );
-                    })
+                                    :
+                                    <Flex w="100%" key={index} >
+                                        <Avatar
+                                            name={element.sender.name}
+                                            size={"sm"}
+                                            src={element.sender.profileImage}
 
-                        : <Center mt={"20%"} >No messages of this chat</Center>}
+                                        > </Avatar>
 
+                                        <Flex
+                                            ml={"5px"}
+                                            flexDirection={"column"}
+                                            bg="gray.100"
+                                            color="black"
+                                            borderRadius={"8px"}
+                                            minW="100px"
+                                            maxW="350px"
+                                            px={"3"}
+                                            pt={chatInfo ? chatInfo.isGroupChat ? "" : "1" : ""}
+                                            my="1"
 
+                                        >
+                                            {chatInfo ? chatInfo.isGroupChat ? <Text alignSelf={"start"} fontSize={["10px", "12px"]} fontWeight="bold" color={index % 2 === 0 ? "#d16000" : "#0078FF"}>{element.sender.name}</Text> : "" : ""}
+                                            <Text>{element.messege}
 
-                    <AlwaysScrollToBottom />
-
-
-
-                  {typing? <Box  >
-                    <HStack >
-                    <Avatar size={"sm"}
-                           src={chatInfo?chatInfo.users[0].profileImage:""}
-                           name={chatInfo?chatInfo.users[0].name:""}
-                           > 
-                           </Avatar>
-                    <Image h={"20px"} src={typeloader}/>
-                    {/* <Text>typing</Text> */}
-                    </HStack> </Box>:""}
-                    
-                </Flex>
-
-                
-                <Box h="53px" p={"6px"}>
-                    <Flex w="100%" justifyContent={"space-between"} px="10px" >
-                        <Input
-                            onChange={handlechange}
-                            value={text}
-                            flexBasis={"84%"}
-                            placeholder="Type Something..."
-                            border="1px"
-                            borderRadius="8px"
-                            _focus={{
-                                border: "1px solid blue.400",
-                            }}
-                            id='msgInput'
-                            onKeyDown={(e) => { if (e.key === 'Enter') handlesend() }}
-
-                        />
+                                            </Text>
+                                            <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{gettime(element.createdAt)}</Text>
+                                        </Flex>
 
 
-                        <IconButton borderRadius={"full"} aria-label='Attachment icon' icon={<AttachmentIcon />} />
+                                    </Flex>
+                            );
+                        })
+
+                            : <Center mt={"20%"} >No messages of this chat</Center>}
 
 
 
-                        <Button onClick={handlesend} colorScheme={"messenger"} borderRadius="8px">Send</Button>
+                        <AlwaysScrollToBottom />
+
+
+
+                        {typing ? <Box  >
+                            <HStack >
+                                <Avatar size={"sm"}
+                                    src={chatInfo ? chatInfo.users[0].profileImage : ""}
+                                    name={chatInfo ? chatInfo.users[0].name : ""}
+                                >
+                                </Avatar>
+                                <Image h={"20px"} src={typeloader} />
+                                {/* <Text>typing</Text> */}
+                            </HStack> </Box> : ""}
+
                     </Flex>
-                </Box>
+
+
+                        <Box h="53px" p={"6px"}>
+                            <Flex w="100%" justifyContent={"space-between"} px="10px" >
+
+                                <VStack position='relative' spacing={0} flexBasis="84%" h="47px">
+                                    {/* <Progress w="98%" value={progress} h="2px" colorScheme="messenger" borderRadius={"full"}
+                                visibility={progress === 0 ? "hidden" : ""}
+                                isAnimated/> */}
+                                    <LoadingBar
+                                        color='#0078FF'
+                                        waitingTime="100"
+                                        // loaderSpeed="1000"
+                                        progress={progress2}
+                                        containerStyle={{ position: 'absolute', width: "98%",
+                                        visibility:progress2 === 0 ? "hidden" : ""
+                                    }}
+                                        onLoaderFinished={() => setProgress2(0)}
+                                    />
+                                    <Input
+
+                                        onChange={handlechange}
+                                        value={text}
+                                        flexBasis={"84%"}
+                                        placeholder="Type Something..."
+                                        variant={"filled"}
+                                        // border="1px"
+                                        border={"none"}
+                                        // outline="none"
+                                        borderRadius="8px"
+                                        _focus={{
+                                            // border: "1px solid blue.400",
+                                            // outline:"none"
+                                            // variant:"filled"
+                                            bg: "gray.200"
+                                        }}
+                                        _hover={{
+                                            bg: "gray.200"
+                                        }}
+                                        id='msgInput'
+                                        onKeyDown={(e) => { if (e.key === 'Enter') handlesend() }}
+
+                                    />
+                                </VStack>
+
+<Box w="8px"></Box>
+
+                                {/* <IconButton borderRadius={"full"} aria-label='Attachment icon' icon={<AttachmentIcon />} /> */}
+                                 
+                                 <ImageModal></ImageModal>
+
+                                <Box w="8px"></Box>
+                                <Button onClick={handlesend} colorScheme={"messenger"} borderRadius="8px">Send</Button>
+                            </Flex>
+                        </Box></> :
+                    <Flex h="86%" align={"center"} justifyContent="center">
+                        <Loader />
+                    </Flex>
+                }
 
 
 

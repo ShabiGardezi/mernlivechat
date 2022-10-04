@@ -10,6 +10,7 @@ import {
 // import Home from './components/Home';
 import {userContext} from "./context/userState"
 import Loader from './components/Loader';
+import { Flex } from '@chakra-ui/react';
 const Home=lazy(()=>import("./components/Home"))
 
 
@@ -34,7 +35,7 @@ function App() {
      <Routes>
       
     <Route path="/" element={
-    <Suspense fallback={<Loader></Loader> } >
+    <Suspense fallback={<Flex h="100vh" w="100vw" align={"center"} justifyContent="center" ><Loader></Loader></Flex> } >
     <Home />
     </Suspense>
     } />

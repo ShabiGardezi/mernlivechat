@@ -28,7 +28,7 @@ function MyChats({ chat,index }) {
   }, [onlineUsers,chat])
   
   const sliceLatestmsg=(msg)=>{
-         return  msg.slice(0,30)
+         return  msg.slice(0,24)
   }
 
 
@@ -41,6 +41,27 @@ function MyChats({ chat,index }) {
           />
         </Icon>
       )
+
+
+      function tConvert(time) {
+        // Check correct time format and split into components
+        time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+        if (time.length > 1) { // If time format correct
+            time = time.slice(1);  // Remove full string match value
+            time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+            time[0] = +time[0] % 12 || 12; // Adjust hours
+        }
+        return time.join(''); // return adjusted time or original string
+    }
+    const gettime = (time) => {
+        let t = tConvert(new Date(time).toLocaleTimeString())
+        let [h, m, s] = t.split(":")
+        let [se, p] = s.split(" ")
+        let ti = h + ":" + m + " " + p;
+        return ti;
+    }
+
 
     return (
         <>
@@ -68,7 +89,12 @@ function MyChats({ chat,index }) {
                 <Box w={"79%"} >
                   <Box>
                     {/* date */}
-                    <Text fontSize={"14px"} textAlign={"right"}>{date}</Text>
+                    <Text fontSize={"14px"} textAlign={"right"}>{
+                    chat.latestMessage?
+                    gettime(chat.latestMessage.createdAt):<Text visibility={"hidden"}>6:20 pm</Text>}</Text>
+
+
+                    
                   </Box>
                   <Box>
                     

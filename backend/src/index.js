@@ -93,13 +93,15 @@ const chat=message.chat;
 
   socket.on("typing",({typing,chat_id,user_id})=>{
     if(typing)
-   { console.log("chat_id: ",chat_id)
-   console.log("user id: ",user_id)
+   { 
     socket.to(user_id).emit("starttyping",{typing,chat_id })
   
   }
-    else socket.to(user_id).emit("stoptyping",{typing,chat_id })
-    console.log("typing: ",typing);
+    else {socket.to(user_id).emit("stoptyping",{typing,chat_id })
+   }
+    // console.log("typing: ",typing);
+    // console.log("chat_id: ",chat_id)
+    // console.log("user id: ",user_id)
   })
 
   socket.on("disconnecting", (reason) => {
