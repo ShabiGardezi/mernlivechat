@@ -471,12 +471,15 @@ const bg=useColorModeValue("gray.200","red")
                                 visibility={progress === 0 ? "hidden" : ""}
                                 isAnimated/> */}
                                     <LoadingBar
+                                    
                                         color='#0078FF'
                                         waitingTime="100"
                                         // loaderSpeed="1000"
                                         progress={progress2}
-                                        containerStyle={{ position: 'absolute', width: "98%",
-                                        visibility:progress2 === 0 ? "hidden" : ""
+                                        containerStyle={{ position: 'absolute', width: "98%", borderRadius:"50px",
+                                       
+                                        visibility:progress2 === 0 ? "hidden" : "",
+                                        marginLeft:"4px"
                                     }}
                                         onLoaderFinished={() => setProgress2(0)}
                                     />
