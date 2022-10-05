@@ -28,30 +28,38 @@ function ChatPage() {
     <>
       <Container maxW="1400px" >
         <Container maxW='1200px'
-         h={isLargerThan700? "700px":"700px"}
-          mt="50px" p={0} 
+         h={isLargerThan700? "700px":"600px"}
+          mt={isLargerThan700? "50px":"15px"}  p={0} 
         >
           <Flex h="100%" justifyContent={"space-between"} >
 
             {/* My chats box start below */}
-            <Box h="100%" flexBasis={"30%"} p={"5px"} minW={"360px"} borderRadius="8px" border={"1px"} borderColor={"#ededed"}
-              boxShadow="2xl"
+            <Box h="100%" flexBasis={"30%"}  minW={"360px"} borderRadius="8px" border={"1px"}
+             borderColor={"#ededed"}
+              boxShadow="2xl"  
+             
             // overflowY={"hidden"} 
             >
-
+<Box px={"5px"} pt="5px" >
               <Box textAlign={"center"} mb={"10px"} >
                 <Heading color={"#999999"}
                   mb={"10px"}>Chats</Heading>
                 <Divider />
               </Box >
 
-              <Box mb={"10px"} w={"100%"} textAlign="center" >
+              <Box mb="4px"  w={"100%"} textAlign="center" >
                 <Gmodal />
               </Box >
 
-
-              <Box h={"84%"} borderRadius="lg" 
-              // overflowY={"auto"}
+              </Box>
+              <Box h={isLargerThan700? "83%":"80%"} 
+              borderRadius="lg" 
+              overflowY={"auto"}
+               
+              pt="10px"
+              px="7px"
+              pb="10px"
+              
               >
                 {context.chats.length > 0 ?
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
-import { Box, Flex, Text, Divider, Button, Avatar, AvatarBadge, Input, AvatarGroup, IconButton, useToast, Center, HStack, Image, Progress, VStack } from '@chakra-ui/react'
+import { Box, Flex, Text, Divider, Button, Avatar, AvatarBadge, Input, AvatarGroup, IconButton, useToast, Center, HStack, Image, Progress, VStack,useMediaQuery } from '@chakra-ui/react'
 import { AttachmentIcon } from '@chakra-ui/icons'
 import axios from "axios"
 import { chatContext } from "../context/chatsState"
@@ -13,7 +13,7 @@ import ImageModal from './ImageModal'
 function ChatBox() {
 
     // console.log("chat box render");
-
+    const [isLargerThan700] = useMediaQuery('(min-height: 700px)')
     const toast = useToast();
     const [progress, setprogress] = useState(0)
     const [progress2, setProgress2] = useState(0)
@@ -331,6 +331,7 @@ function ChatBox() {
         return time.join(''); // return adjusted time or original string
     }
     const gettime = (time) => {
+        console.log("time")
         let t = tConvert(new Date(time).toLocaleTimeString())
         let [h, m, s] = t.split(":")
         let [se, p] = s.split(" ")
@@ -381,7 +382,7 @@ function ChatBox() {
 
 
                 {!showloading ?
-                    <><Flex w="100%" h="80%" overflowY="auto" flexDirection="column" p="3">
+                    <><Flex w="100%" h={isLargerThan700? "80%":"77%"} overflowY="auto" flexDirection="column" p="3">
 
 
 
