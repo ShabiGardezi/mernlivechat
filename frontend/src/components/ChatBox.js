@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
-import { Box, Flex, Text, Divider, Button, Avatar, AvatarBadge, Input, AvatarGroup, IconButton, useToast, Center, HStack, Image, Progress, VStack,useMediaQuery } from '@chakra-ui/react'
+import { Box, Flex, Text, Divider, Button, Avatar, AvatarBadge, Input, AvatarGroup, IconButton, useToast, Center, HStack, Image, Progress, VStack,useMediaQuery, useColorMode,useColorModeValue } from '@chakra-ui/react'
 import { AttachmentIcon } from '@chakra-ui/icons'
 import axios from "axios"
 import { chatContext } from "../context/chatsState"
@@ -25,7 +25,7 @@ function ChatBox() {
     const [onlineStatus, setonlineStatus] = useState("Offline")
 
     const [startedTyping, setstartedTyping] = useState(false)
-
+    const { colorMode, toggleColorMode } = useColorMode()
     const AlwaysScrollToBottom = () => {
         const elementRef = useRef();
         useEffect(() => elementRef.current.scrollIntoView());
@@ -338,7 +338,7 @@ function ChatBox() {
         let ti = h + ":" + m + " " + p;
         return ti;
     }
-
+const bg=useColorModeValue("gray.200","red")
     return (
         <>
 
@@ -487,18 +487,15 @@ function ChatBox() {
                                         flexBasis={"84%"}
                                         placeholder="Type Something..."
                                         variant={"filled"}
-                                        // border="1px"
                                         border={"none"}
-                                        // outline="none"
+                                       
                                         borderRadius="8px"
                                         _focus={{
-                                            // border: "1px solid blue.400",
-                                            // outline:"none"
-                                            // variant:"filled"
-                                            bg: "gray.200"
+                                            
+                                            bg:colorMode ==="light"?"gray.200":"rgba(255, 255, 255, 0.04)"
                                         }}
                                         _hover={{
-                                            bg: "gray.200"
+                                            bg: colorMode ==="light"?"gray.200":""
                                         }}
                                         id='msgInput'
                                         onKeyDown={(e) => { if (e.key === 'Enter') handlesend() }}

@@ -26,8 +26,8 @@ function ChatPage() {
 
   return (
     <>
-      <Container maxW="1400px" >
-        <Container maxW='1200px'
+      <Container maxW="1400px"  >
+        <Container maxW='1200px' mb="20px"
          h={isLargerThan700? "700px":"600px"}
           mt={isLargerThan700? "50px":"15px"}  p={0} 
         >
