@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from 'react'
+import React, { useEffect, useState, useContext, useRef,useMemo } from 'react'
 import { Box, Flex, Text, Divider, Button, Avatar, AvatarBadge, Input, AvatarGroup, IconButton, useToast, Center, HStack, Image, Progress, VStack,useMediaQuery, useColorMode,useColorModeValue } from '@chakra-ui/react'
 import { AttachmentIcon } from '@chakra-ui/icons'
 import axios from "axios"
@@ -331,14 +331,77 @@ function ChatBox() {
         return time.join(''); // return adjusted time or original string
     }
     const gettime = (time) => {
-        console.log("time")
+        // console.log("time")
         let t = tConvert(new Date(time).toLocaleTimeString())
         let [h, m, s] = t.split(":")
         let [se, p] = s.split(" ")
         let ti = h + ":" + m + " " + p;
         return ti;
     }
-const bg=useColorModeValue("gray.200","red")
+
+let showMessages=useMemo(() => 
+
+{
+    return  messages.map((element, index) => {
+        console.log("render")
+        return (
+            user._id === element.sender._id ? <Flex w="100%" key={element._id} justify="flex-end">
+                <Flex
+
+                    flexDirection={"column"}
+                    position="relative"
+                    bg="#0078FF"
+                    color="white"
+                    minW="100px"
+                    maxW="350px"
+                    borderRadius={"8px"}
+                    my="1"
+                    // p="3"
+                    px={"3"}
+                    pt="1"
+                >
+                    <Text>{element.messege}</Text>
+                    <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{gettime(element.createdAt)}</Text>
+                </Flex>
+            </Flex>
+                :
+                <Flex w="100%" key={element._id} >
+                    <Avatar
+                        name={element.sender.name}
+                        size={"sm"}
+                        src={element.sender.profileImage}
+
+                    > </Avatar>
+
+                    <Flex
+                        ml={"5px"}
+                        flexDirection={"column"}
+                        bg="gray.100"
+                        color="black"
+                        borderRadius={"8px"}
+                        minW="100px"
+                        maxW="350px"
+                        px={"3"}
+                        pt={chatInfo ? chatInfo.isGroupChat ? "" : "1" : ""}
+                        my="1"
+
+                    >
+                        {chatInfo ? chatInfo.isGroupChat ? <Text alignSelf={"start"} fontSize={["10px", "12px"]} fontWeight="bold" color={index % 2 === 0 ? "#d16000" : "#0078FF"}>{element.sender.name}</Text> : "" : ""}
+                        <Text>{element.messege}
+
+                        </Text>
+                        <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{gettime(element.createdAt)}</Text>
+                    </Flex>
+
+
+                </Flex>
+        );
+    })
+}
+
+
+, [messages])
+
     return (
         <>
 
@@ -386,60 +449,7 @@ const bg=useColorModeValue("gray.200","red")
 
 
 
-                        {messages.length > 0 ? messages.map((element, index) => {
-                            return (
-                                user._id === element.sender._id ? <Flex w="100%" key={index} justify="flex-end">
-                                    <Flex
-
-                                        flexDirection={"column"}
-                                        position="relative"
-                                        bg="#0078FF"
-                                        color="white"
-                                        minW="100px"
-                                        maxW="350px"
-                                        borderRadius={"8px"}
-                                        my="1"
-                                        // p="3"
-                                        px={"3"}
-                                        pt="1"
-                                    >
-                                        <Text>{element.messege}</Text>
-                                        <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{gettime(element.createdAt)}</Text>
-                                    </Flex>
-                                </Flex>
-                                    :
-                                    <Flex w="100%" key={index} >
-                                        <Avatar
-                                            name={element.sender.name}
-                                            size={"sm"}
-                                            src={element.sender.profileImage}
-
-                                        > </Avatar>
-
-                                        <Flex
-                                            ml={"5px"}
-                                            flexDirection={"column"}
-                                            bg="gray.100"
-                                            color="black"
-                                            borderRadius={"8px"}
-                                            minW="100px"
-                                            maxW="350px"
-                                            px={"3"}
-                                            pt={chatInfo ? chatInfo.isGroupChat ? "" : "1" : ""}
-                                            my="1"
-
-                                        >
-                                            {chatInfo ? chatInfo.isGroupChat ? <Text alignSelf={"start"} fontSize={["10px", "12px"]} fontWeight="bold" color={index % 2 === 0 ? "#d16000" : "#0078FF"}>{element.sender.name}</Text> : "" : ""}
-                                            <Text>{element.messege}
-
-                                            </Text>
-                                            <Text alignSelf={"end"} fontSize={["10px", "12px"]}>{gettime(element.createdAt)}</Text>
-                                        </Flex>
-
-
-                                    </Flex>
-                            );
-                        })
+                        {messages.length > 0 ? showMessages
 
                             : <Center mt={"20%"} >No messages of this chat</Center>}
 
