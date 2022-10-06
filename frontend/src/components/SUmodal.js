@@ -7,12 +7,12 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Flex, Input, useToast
+  Flex, Input, useToast,InputGroup,InputLeftElement
 
 } from '@chakra-ui/react'
 import axios from 'axios';
 import Loader from "./Loader"
-import { AttachmentIcon } from "@chakra-ui/icons"
+import { SearchIcon } from "@chakra-ui/icons"
 import SUprofile from './SUprofile';
 
 function SUModal({ isOpen, onOpen, onClose }) {
@@ -78,7 +78,17 @@ function SUModal({ isOpen, onOpen, onClose }) {
           <ModalHeader>Search Users</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input variant='flushed' flexBasis={"85%"} placeholder="Search here" autoComplete="off" onChange={handlechange} id="search" />
+            {/* <Input variant='flushed' flexBasis={"85%"} placeholder="Search here" autoComplete="off" onChange={handlechange} id="search" /> */}
+
+
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents='none'
+                children={<SearchIcon color='gray.300' />}
+              />
+              <Input autoComplete="off" type={"search"} onChange={handlechange} id="search" variant='flushed' flexBasis={"100%"} placeholder='Search Users' />
+            </InputGroup>
+
 
             {showloading? 
             <Flex mt="10px"  alignItems="center" justifyContent={"center"}>

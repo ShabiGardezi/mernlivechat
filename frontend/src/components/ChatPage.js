@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Box, Container, Flex, Heading, Divider, Button,useMediaQuery  } from '@chakra-ui/react'
+import { Box, Container, Flex, Heading, Divider, Button, useMediaQuery } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 
 import { chatContext } from "../context/chatsState"
@@ -28,39 +28,42 @@ function ChatPage() {
     <>
       <Container maxW="1400px"  >
         <Container maxW='1200px' mb="20px"
-         h={isLargerThan700? "700px":"600px"}
-          mt={isLargerThan700? "50px":"15px"}  p={0} 
+          h={isLargerThan700 ? "700px" : "600px"}
+          mt={isLargerThan700 ? "50px" : "15px"} p={0}
         >
-          <Flex h="100%" justifyContent={"space-between"} >
+          <Flex h="100%" justifyContent={"space-between"}>
 
             {/* My chats box start below */}
-            <Box h="100%" flexBasis={"30%"}  minW={"360px"} borderRadius="8px" border={"1px"}
-             borderColor={"#ededed"}
-              boxShadow="2xl"  
-             
+            <Box h="100%" flexBasis={"30%"} minW={"360px"} borderRadius="8px"
+            
+
             // overflowY={"hidden"} 
             >
-<Box px={"5px"} pt="5px" >
-              <Box textAlign={"center"} mb={"10px"} >
-                <Heading color={"#999999"}
-                  mb={"10px"}>Chats</Heading>
-                <Divider />
-              </Box >
+              <Box p={"5px"} borderRadius="8px"    border={"1px"}
+              borderColor={"#ededed"}
+              boxShadow="lg" mb="20px" >
+                <Box textAlign={"center"} mb={"10px"} >
+                  <Heading color={"#999999"}
+                    mb={"10px"}>Chats</Heading>
+                  <Divider />
+                </Box >
 
-              <Box mb="4px"  w={"100%"} textAlign="center" >
-                <Gmodal />
-              </Box >
+                <Box mb="4px" w={"100%"} textAlign="center" >
+                  <Gmodal />
+                </Box >
 
               </Box>
-              <Box h={isLargerThan700? "83%":"80%"} 
-              borderRadius="lg" 
-              overflowY={"auto"}
-               
-              pt="10px"
-              px="7px"
-              pb="10px"
-              
-              >
+              <Box h={isLargerThan700 ? "80%" : "77%"}
+                borderRadius="lg"
+                overflowY={"auto"}
+                border={"1px"}
+              borderColor={"#ededed"}
+              boxShadow="xl"
+                pt="10px"
+                px="7px"
+                pb="10px"
+
+               >
                 {context.chats.length > 0 ?
 
                   context.chats.map((element, index) => {
@@ -84,6 +87,7 @@ function ChatPage() {
                 :
                 <Box bgImage={`url(${bgimg})`}
                   bgPosition="center"
+                  boxShadow="xl"
                   bgRepeat="no-repeat"
                   borderRadius={"8px"}
                   bgSize={"cover"}

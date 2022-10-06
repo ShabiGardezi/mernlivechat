@@ -76,6 +76,7 @@ function MyChats({ chat,index }) {
                  
                   
                 }}
+                
                 transition="background-color 0.2s,color 0.2s,box-shadow 0.3s"
                 borderRadius="8px"
                 justifyContent={"center"}
