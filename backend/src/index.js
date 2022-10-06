@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const dotenv = require("dotenv");
+dotenv.config();
 const createuser=require("./routes/createuser");
 const loginuser=require("./routes/loginuser");
 const getuser=require("./routes/getuser");
@@ -13,8 +15,10 @@ const creategroupchat=require("./routes/creategroupchat");
 const verifyToken=require("./routes/verifyToken");
 const Chat=require("../Models/chatModel")
 const cors = require("cors");
+const path=require("path")
 
-const port = 5000 || process.env.port;
+
+const port =  process.env.PORT || 5000;
 
 connectTodatabase(); //connection to database
 
@@ -25,6 +29,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+
 
 // api endpoint routes for User
 app.use("/api/createuser",createuser);
@@ -42,6 +48,37 @@ app.use("/api/creategroupchat",creategroupchat);
 app.use("/api/sendmsg",sendmsg);
 app.use("/api/fetchmessages/:chat_id",fetchmessages);
 
+
+//----------------------deployment -------------------------
+
+const __dirname1=path.resolve()
+
+if(process.env.NODE_ENV==='production')
+{
+  console.log("running in production mode")
+
+  app.use(express.static(path.join(__dirname1,"../../", "/frontend/build")));
+console.log(__dirname1);
+  app.get("*", (req, res) =>{
+  res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"))
+}
+);
+  
+}
+else{
+console.log("running in development mode")
+app.get("/", (req, res) => {
+  res.send("API is running..");
+});
+}
+
+//----------------------deployment -------------------------
+
+
+
+
+
+
 const server=app.listen(port, () => {
   console.log(`Chat app listening on port ${port}`)
 });
@@ -55,7 +92,7 @@ const io= require("socket.io")(server,{
 
 io.on("connection" ,(socket)=>{
 
-console.log("connected")
+// console.log("connected")
   socket.use(async([event,...args],next)=>{
 if(event ==="setup"){
  // return all Socket instances of the main namespace
@@ -114,7 +151,7 @@ const chat=message.chat;
 
 
 socket.on("disconnect",(reason)=>{
-  console.log(reason)
+  // console.log(reason)
 })
 
 

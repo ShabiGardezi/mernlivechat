@@ -31,7 +31,8 @@ function SUModal({ isOpen, onOpen, onClose }) {
     else {
       setnoResultsFound(false)
       setshowloading(true);
-      axios.get(`http://localhost:5000/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+      // axios.get(`http://localhost:5000/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+      axios.get(`/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
         .then(res => {
           // console.log(res.data);
           if (res.data.success)

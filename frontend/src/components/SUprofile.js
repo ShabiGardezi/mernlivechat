@@ -25,8 +25,8 @@ function SUprofile({name,img,_id,onClose}) {
     })  
     return 
   }
-
-  axios.post(`http://localhost:5000/api/accesschat`, {user_id:_id},{ headers: { token: JSON.parse(localStorage.getItem("token")) } })
+  // axios.post(`http://localhost:5000/api/accesschat`, {user_id:_id},{ headers: { token: JSON.parse(localStorage.getItem("token")) } })
+  axios.post(`/api/accesschat`, {user_id:_id},{ headers: { token: JSON.parse(localStorage.getItem("token")) } })
   .then(res => {
     if(res.data.success)
    { context.updateChats([res.data.payload,...context.chats])

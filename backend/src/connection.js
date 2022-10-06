@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const dotenv = require("dotenv");
 
+dotenv.config({path:"../.env"});
 
-module.exports=()=>{ mongoose.connect('mongodb+srv://hunfa:123@cluster0.z2kbwem.mongodb.net/?retryWrites=true&w=majority',{
+module.exports=()=>{ mongoose.connect(process.env.MONGO_URI,{
     useNewUrlParser: true,
     useUnifiedTopology: true
 })

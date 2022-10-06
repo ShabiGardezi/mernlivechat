@@ -131,8 +131,8 @@ function ChatBox() {
         getChatinfo();
         const fetchMessages = () => {
             if (!selectedChat) return;
-
-            axios.get(`http://localhost:5000/api/fetchmessages/${selectedChat}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+            // axios.get(`http://localhost:5000/api/fetchmessages/${selectedChat}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+            axios.get(`/api/fetchmessages/${selectedChat}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
                 .then(res => {
 
                     if (res.data.success) {
@@ -251,7 +251,8 @@ function ChatBox() {
         // setprogress(20);
         setProgress2(20);
         let msg = text;
-        axios.post(`http://localhost:5000/api/sendmsg`, { chat_id: selectedChat, msg }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+        // axios.post(`http://localhost:5000/api/sendmsg`, { chat_id: selectedChat, msg }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+        axios.post(`/api/sendmsg`, { chat_id: selectedChat, msg }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
             .then(res => {
                 // console.log(res.data.payload)
                 if (res.data.success) {
@@ -496,7 +497,7 @@ let ShowMessages=useMemo(() =>
                                         onLoaderFinished={() => setProgress2(0)}
                                     />
                                     <Input
-
+autoComplete='off'
                                         onChange={handlechange}
                                         value={text}
                                         flexBasis={"84%"}

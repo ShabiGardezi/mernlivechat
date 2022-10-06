@@ -27,7 +27,7 @@ const _setselectedChat = (chat_id) => {
 
    useEffect(() => {
 
-    let socket = io("http://localhost:5000");
+    let socket = io("https://realtime-mern-chat-app.herokuapp.com/");
     setsocket(socket);
 
     socket.emit("setup", user._id);
@@ -109,7 +109,7 @@ useEffect(() => {
 
     const fetchChats=()=>{
 
-        axios.get(`http://localhost:5000/api/getallchats`, { headers: { token: JSON.parse(localStorage.getItem("token")) }
+        axios.get(`/api/getallchats`, { headers: { token: JSON.parse(localStorage.getItem("token")) }
     ,
     onDownloadProgress: function (e) {
       console.log(Math.trunc((e.loaded / e.total)*100))

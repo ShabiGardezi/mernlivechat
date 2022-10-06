@@ -39,8 +39,8 @@ export default function SignUp(props) {
             const email = values.email;
             const password = values.password;
             const name=values.fname+" "+values.lname;
-
-            axios.post(`http://localhost:5000/api/createuser`, {name, email, password,pic })
+            // axios.post(`http://localhost:5000/api/createuser`, {name, email, password,pic })
+            axios.post(`/api/createuser`, {name, email, password,pic })
                 .then(res => {
                     console.log(res.data);
                     setisloading(false);

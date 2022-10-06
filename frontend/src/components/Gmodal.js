@@ -52,7 +52,8 @@ function Gmodal() {
     const groupName = document.getElementById("groupName").value;
     if (groupMembers.length >= 2)
       if (groupName) {
-        axios.post(`http://localhost:5000/api/creategroupchat`, { users: groupMembers, chatName: groupName }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+        // axios.post(`http://localhost:5000/api/creategroupchat`, { users: groupMembers, chatName: groupName }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+        axios.post(`/api/creategroupchat`, { users: groupMembers, chatName: groupName }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
         .then(res => {
           // console.log(res.data);
           if (res.data.success) {
@@ -110,7 +111,8 @@ function Gmodal() {
     else {
       setnoResultsFound(false);
       setshowloading(true);
-      axios.get(`http://localhost:5000/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+      // axios.get(`http://localhost:5000/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+      axios.get(`/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
         .then(res => {
           // console.log(res.data);
           if (res.data.success)

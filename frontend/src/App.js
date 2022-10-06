@@ -22,7 +22,7 @@ function App() {
     let verifyToken=JSON.parse(localStorage.getItem("token"));
   if(verifyToken){
     
-    axios.get(`http://localhost:5000/api/verifyToken`, { headers: { token: verifyToken } }).then((res)=>{
+    axios.get(`/api/verifyToken`, { headers: { token: verifyToken } }).then((res)=>{
       if(res.data.success){
         setuser(res.data.payload);
       

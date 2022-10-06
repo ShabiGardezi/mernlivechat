@@ -33,7 +33,8 @@ function Login(props) {
       const email = values.email;
       const password = values.password;
 
-      axios.post(`http://localhost:5000/api/loginuser`, { email, password })
+      // axios.post(`http://localhost:5000/api/loginuser`, { email, password })
+      axios.post(`/api/loginuser`, { email, password })
         .then(res => {
           // console.log(res.data);
           setisloading(false);
