@@ -8,7 +8,7 @@ import {userContext} from "../context/userState"
 function Login(props) {
 
   const [isloading, setisloading] = useState(false);
-  const {_setUser } = useContext(userContext);
+  const {setuser } = useContext(userContext);
 
   const toast = useToast();
   const showtoast = ({ title, description, status, duration }) => {
@@ -39,9 +39,8 @@ function Login(props) {
           setisloading(false);
 
           if (res.data.success) {
+            setuser(res.data.payload.user);
             localStorage.setItem("token",JSON.stringify(res.data.payload.token) )
-            localStorage.setItem("user",JSON.stringify(res.data.payload.user) )
-            _setUser();
           }
           else{
             

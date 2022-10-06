@@ -1,4 +1,4 @@
-import {useState,useContext,lazy,Suspense} from 'react'
+import {useState,useContext,lazy,Suspense,useEffect} from 'react'
 import './App.css';
 import Login from './components/Login';
 import Signup from './components/SignUp';
@@ -11,11 +11,31 @@ import {
 import {userContext} from "./context/userState"
 import Loader from './components/Loader';
 import { Flex } from '@chakra-ui/react';
+import axios from "axios"
 const Home=lazy(()=>import("./components/Home"))
 
 
 function App() {
-  const { user } = useContext(userContext);
+  const { user,setuser } = useContext(userContext);
+  useEffect(() => {
+   
+    let verifyToken=JSON.parse(localStorage.getItem("token"));
+  if(verifyToken){
+    
+    axios.get(`http://localhost:5000/api/verifyToken`, { headers: { token: verifyToken } }).then((res)=>{
+      if(res.data.success){
+        setuser(res.data.payload);
+      
+      }
+      // else
+      // console.log(res.data.payload)
+     
+    });
+  }
+  
+   
+  }, [])
+  
   
 
   return (

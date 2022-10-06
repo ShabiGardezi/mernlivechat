@@ -22,14 +22,13 @@ import {userContext} from "../context/userState"
 export default function Nav() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { user ,_setUser} = useContext(userContext);
+  const { user ,setuser} = useContext(userContext);
 
 
 
 const handleLogout=()=>{
   localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  _setUser()
+  setuser()
 }
 
 

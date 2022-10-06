@@ -10,6 +10,7 @@ const getallchats=require("./routes/getallchats");
 const accessChat=require("./routes/accessChat");
 const searchuser=require("./routes/searchuser");
 const creategroupchat=require("./routes/creategroupchat");
+const verifyToken=require("./routes/verifyToken");
 const Chat=require("../Models/chatModel")
 const cors = require("cors");
 
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use("/api/createuser",createuser);
 app.use("/api/loginuser",loginuser);
 app.use("/api/getuser",getuser);
+app.use("/api/verifyToken",verifyToken);
 
 //api endpoint routes for Chat
 app.use("/api/getallchats",getallchats);

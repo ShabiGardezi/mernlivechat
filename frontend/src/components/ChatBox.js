@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef,useMemo } from 'react'
+import React, { useEffect, useState, useContext, useRef,useMemo, useCallback } from 'react'
 import { Box, Flex, Text, Divider, Button, Avatar, AvatarBadge, Input, AvatarGroup, IconButton, useToast, Center, HStack, Image, Progress, VStack,useMediaQuery, useColorMode,useColorModeValue } from '@chakra-ui/react'
 import { AttachmentIcon } from '@chakra-ui/icons'
 import axios from "axios"
@@ -104,7 +104,7 @@ function ChatBox() {
         else
             settyping(false);
 
-        console.log(typingchats)
+       
 
     }, [typingchats])
 
@@ -331,23 +331,25 @@ function ChatBox() {
         return time.join(''); // return adjusted time or original string
     }
     const gettime = (time) => {
-        // console.log("time")
+        console.log("time")
         let t = tConvert(new Date(time).toLocaleTimeString())
         let [h, m, s] = t.split(":")
         let [se, p] = s.split(" ")
         let ti = h + ":" + m + " " + p;
         return ti;
     }
+   
 
-let showMessages=useMemo(() => 
+let ShowMessages=useMemo(() => 
 
 {
     return  messages.map((element, index) => {
-        console.log("render")
-        return (
-            user._id === element.sender._id ? <Flex w="100%" key={element._id} justify="flex-end">
-                <Flex
+        // console.log("render")
 
+        return (
+            user._id === element.sender._id ? <Flex w="100%" key={element._id} justify="flex-end" >
+                <Flex
+                     
                     flexDirection={"column"}
                     position="relative"
                     bg="#0078FF"
@@ -365,7 +367,7 @@ let showMessages=useMemo(() =>
                 </Flex>
             </Flex>
                 :
-                <Flex w="100%" key={element._id} >
+                <Flex w="100%" key={element._id}  >
                     <Avatar
                         name={element.sender.name}
                         size={"sm"}
@@ -449,7 +451,7 @@ let showMessages=useMemo(() =>
 
 
 
-                        {messages.length > 0 ? showMessages
+                        {messages.length > 0 ? ShowMessages
 
                             : <Center mt={"20%"} >No messages of this chat</Center>}
 

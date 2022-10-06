@@ -23,6 +23,7 @@ function Gmodal() {
   const [searchUsers, setsearchUsers] = useState([])
   const [groupMembers, setgroupMembers] = useState([]);
   const [showloading, setshowloading] = useState(false)
+  const [noResultsFound, setnoResultsFound] = useState(false)
   const toast = useToast();
   const context = useContext(chatContext);
   const handleAddtogroup = ({ name, _id, img }) => {
@@ -104,14 +105,20 @@ function Gmodal() {
     const searchtext = e.target.value;
     if (!searchtext) {
       setsearchUsers([])
+      setnoResultsFound(false)
     }
     else {
+      setnoResultsFound(false);
       setshowloading(true);
       axios.get(`http://localhost:5000/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
         .then(res => {
           // console.log(res.data);
           if (res.data.success)
-            setsearchUsers(res.data.payload);
+            {setsearchUsers(res.data.payload);
+            if(res.data.payload.length <= 0){
+                     setnoResultsFound(true);
+            }
+            }
           else {
             toast({
               title: "ERROR OCCURED",
@@ -171,7 +178,7 @@ function Gmodal() {
                 return <Gprofile handlesubmit={handlesubmit} handleAddtogroup={handleAddtogroup} key={index} name={element.name} img={element.profileImage} _id={element._id} />
               }
 
-              ) : ""}
+              ) : noResultsFound? <Text mt="10px">No Results Found</Text>:""}
 
 
             </Flex>}

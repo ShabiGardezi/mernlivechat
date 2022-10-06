@@ -14,7 +14,7 @@ function ChatPage() {
 
   const context = useContext(chatContext);
   const [isLargerThan700] = useMediaQuery('(min-height: 700px)')
-
+  const [isLargerThan950] = useMediaQuery('(min-width: 950px)')
   // useEffect(() => {
 
   //     context.fetchChats();
@@ -92,7 +92,7 @@ function ChatPage() {
                   borderRadius={"8px"}
                   bgSize={"cover"}
                   h="100%" bgColor={"grey"} w={"67%"} display="flex" justifyContent={"center"} alignItems="start">
-                  <Heading mt={"40px"} color={"blue.400"} fontSize={"2rem"}>Select a Chat to Start Messaging</Heading>
+                  <Heading mt={"40px"} color={"blue.400"} fontSize={isLargerThan950 ? "2rem" : "1.5rem"}>Select a Chat to Start Messaging</Heading>
                 </Box>}
 
             </MessegeState>

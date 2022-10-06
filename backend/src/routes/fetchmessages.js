@@ -13,7 +13,7 @@ router.get("/", authuser, async (req, res) => {
         
         const { chat_id } = req.params;
         try {
-            
+          
             const messages=await Message.find({chat:chat_id})
             .populate("sender","name profileImage")
             .sort({createdAt:1});

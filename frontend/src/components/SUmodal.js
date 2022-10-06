@@ -7,7 +7,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Flex, Input, useToast,InputGroup,InputLeftElement
+  Flex, Input, useToast,InputGroup,InputLeftElement,Text
 
 } from '@chakra-ui/react'
 import axios from 'axios';
@@ -19,21 +19,24 @@ function SUModal({ isOpen, onOpen, onClose }) {
   // const { isOpen, onOpen, onClose } = useDisclosure()
   const [searchUsers, setsearchUsers] = useState([])
   const [showloading, setshowloading] = useState(false)
+  const [noResultsFound, setnoResultsFound] = useState(false)
   const toast = useToast();
 
   const handlechange = (e) => {
     const searchtext = e.target.value;
     if (!searchtext) {
       setsearchUsers([])
+      setnoResultsFound(false)
     }
     else {
+      setnoResultsFound(false)
       setshowloading(true);
       axios.get(`http://localhost:5000/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
         .then(res => {
           // console.log(res.data);
           if (res.data.success)
            { setsearchUsers(res.data.payload);
-            
+            setnoResultsFound(true);
           }
 
           else {
@@ -101,7 +104,7 @@ function SUModal({ isOpen, onOpen, onClose }) {
                 return <SUprofile onClose={onClose} key={index} name={element.name} img={element.profileImage} _id={element._id} />
               }
 
-              ) : ""}
+              ) : noResultsFound? <Text mt="10px">No Results Found</Text>:""}
             </Flex>}
 
           </ModalBody>
