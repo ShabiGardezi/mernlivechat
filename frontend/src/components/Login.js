@@ -75,10 +75,8 @@ function Login(props) {
       bg={useColorModeValue('gray.50', 'gray.800')}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
-          <Heading fontSize={'4xl'}>Sign in to your account</Heading>
-          <Text fontSize={'lg'} color={'gray.600'}>
-            to enjoy all of our cool
-          </Text>
+          <Heading fontSize={'4xl'}>Login in to your account</Heading>
+          
         </Stack>
         <Box
           rounded={'lg'}
@@ -93,17 +91,12 @@ function Login(props) {
             </FormControl>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
-              <Input name='password' onChange={formik.handleChange} type="password" isRequired/>
+              <Input mb="25px" name='password' onChange={formik.handleChange} type="password" isRequired/>
             </FormControl>
             <Stack spacing={10}>
-              <Stack
-                direction={{ base: 'column', sm: 'row' }}
-                align={'start'}
-                justify={'space-between'}>
-                <Checkbox>Remember me</Checkbox>
-
-              </Stack>
+             
               <Button
+              
               type='submit'
               isLoading={isloading ? true : false}
               loadingText="Signing In"
@@ -113,7 +106,7 @@ function Login(props) {
                 _hover={{
                   bg: 'blue.500',
                 }}>
-                Sign in
+                Login
               </Button>
             </Stack>
             <Stack pt={6}>
