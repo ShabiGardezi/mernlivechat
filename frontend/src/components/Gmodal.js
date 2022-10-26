@@ -24,6 +24,7 @@ function Gmodal() {
   const [groupMembers, setgroupMembers] = useState([]);
   const [showloading, setshowloading] = useState(false)
   const [noResultsFound, setnoResultsFound] = useState(false)
+  const [axiosinprocess, setaxiosinprocess] = useState(false);
   const toast = useToast();
   const context = useContext(chatContext);
   const handleAddtogroup = ({ name, _id, img }) => {
@@ -52,6 +53,7 @@ function Gmodal() {
     const groupName = document.getElementById("groupName").value;
     if (groupMembers.length >= 2)
       if (groupName) {
+        setaxiosinprocess(true)
         // axios.post(`http://localhost:5000/api/creategroupchat`, { users: groupMembers, chatName: groupName }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
         axios.post(`/api/creategroupchat`, { users: groupMembers, chatName: groupName }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
         .then(res => {
@@ -60,9 +62,11 @@ function Gmodal() {
             context.updateChats([res.data.payload, ...context.chats])
             setgroupMembers([]);
             setsearchUsers([])
+            setaxiosinprocess(false)
             onClose();
           }
           else {
+            setaxiosinprocess(false)
             toast({
               title: "ERROR OCCURED",
               description: res.data.payload,
@@ -72,6 +76,7 @@ function Gmodal() {
             });
           }
         }).catch(function (error) {
+          setaxiosinprocess(false)
           toast({
             title: error.message,
             status: 'error',
@@ -202,7 +207,7 @@ function Gmodal() {
 
           </ModalBody>
           <ModalFooter>
-            <Button onClick={handlesubmit} colorScheme={"messenger"}>Create Group</Button>
+            <Button disabled={axiosinprocess} onClick={handlesubmit} colorScheme={"messenger"}>Create Group</Button>
 
           </ModalFooter>
         </ModalContent>

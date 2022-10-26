@@ -27,7 +27,7 @@ const _setselectedChat = (chat_id) => {
 
    useEffect(() => {
 
-    let socket = io("https://realtime-mern-chat-app.herokuapp.com/");
+    let socket = io("https://chatting-app-real-time.herokuapp.com/");
     setsocket(socket);
 
     socket.emit("setup", user._id);

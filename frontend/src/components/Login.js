@@ -53,6 +53,7 @@ function Login(props) {
           });
           }
         }).catch(function(error){
+          setisloading(false);
           toast({
             title: error.message,
             status: 'error',

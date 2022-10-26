@@ -13,6 +13,7 @@ export default function SignUp(props) {
     const [isloading, setisloading] = useState(false)
     const [pic, setpic] = useState()
     const toast = useToast();
+    const [uploading, setuploading] = useState(false)
     const showtoast = ({ title, description, status, duration }) => {
         toast({
             title,
@@ -42,7 +43,7 @@ export default function SignUp(props) {
             // axios.post(`http://localhost:5000/api/createuser`, {name, email, password,pic })
             axios.post(`/api/createuser`, {name, email, password,pic })
                 .then(res => {
-                    console.log(res.data);
+                   
                     setisloading(false);
 
                     if (res.data.success) 
@@ -64,6 +65,7 @@ export default function SignUp(props) {
                         });
                     }
                 }).catch(function(error){
+                    setisloading(false);
                     toast({
                         title: error.message,
                         status: 'error',
@@ -78,7 +80,7 @@ export default function SignUp(props) {
     }
     const [location, setlocation] = useState()
     const [progress, setprogress] = useState(0);
-    const [uploading, setuploading] = useState(false)
+   
 const apiKey="142577837761974";
 const cloudName="dld4hmoaj";
 const filesubmit=async()=>{
@@ -133,6 +135,7 @@ const filesubmit=async()=>{
       setprogress(0);
   }
   else{
+    setuploading(false)
     showtoast({
         title: "NETWORK ERROR OCCURED",
         description: "error while uploading image",

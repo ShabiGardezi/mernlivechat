@@ -514,7 +514,7 @@ autoComplete='off'
                                             bg: colorMode ==="light"?"gray.200":""
                                         }}
                                         id='msgInput'
-                                        onKeyDown={(e) => { if (e.key === 'Enter') handlesend() }}
+                                        onKeyDown={(e) => { if (e.key === 'Enter' &&progress2===0) handlesend() }}
 
                                     />
                                 </VStack>
@@ -526,7 +526,7 @@ autoComplete='off'
                                  <ImageModal></ImageModal>
 
                                 <Box w="8px"></Box>
-                                <Button onClick={handlesend} colorScheme={"messenger"} borderRadius="8px">Send</Button>
+                                <Button onClick={handlesend} colorScheme={"messenger"} borderRadius="8px" disabled={progress2!==0}>Send</Button>
                             </Flex>
                         </Box></> :
                     <Flex h="86%" align={"center"} justifyContent="center">
