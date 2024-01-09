@@ -9,6 +9,7 @@ import typeloader from "./Vanilla-1s-183px.png"
 import Loader from "./Loader"
 import LoadingBar from 'react-top-loading-bar'
 import ImageModal from './ImageModal'
+import constants from '../constants'
 // var socket = 0;
 function ChatBox() {
 
@@ -132,34 +133,36 @@ function ChatBox() {
         const fetchMessages = () => {
             if (!selectedChat) return;
             // axios.get(`http://localhost:5000/api/fetchmessages/${selectedChat}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
-            axios.get(`/api/fetchmessages/${selectedChat}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
-                .then(res => {
+            axios
+              .get(`${constants.baseUrl}/api/fetchmessages/${selectedChat}`, {
+                headers: { token: JSON.parse(localStorage.getItem("token")) },
+              })
+              .then((res) => {
+                if (res.data.success) {
+                  _setmessages(res.data.payload);
+                  setshowloading(false);
+                } else {
+                  _setmessages([]);
+                  toast({
+                    title: "ERROR OCCURED",
+                    description: res.data.payload,
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                  });
+                }
+              })
+              .catch(function (error) {
+                // console.log(error)
+                _setmessages([]);
 
-                    if (res.data.success) {
-                        _setmessages(res.data.payload);
-                        setshowloading(false)
-                    }
-                    else {
-                        _setmessages([]);
-                        toast({
-                            title: "ERROR OCCURED",
-                            description: res.data.payload,
-                            status: 'error',
-                            duration: 5000,
-                            isClosable: true,
-                        });
-                    }
-                }).catch(function (error) {
-                    // console.log(error)
-                    _setmessages([]);
-
-                    toast({
-                        title: error.message,
-                        status: 'error',
-                        duration: 5000,
-                        isClosable: true,
-                    });
-                })
+                toast({
+                  title: error.message,
+                  status: "error",
+                  duration: 5000,
+                  isClosable: true,
+                });
+              });
         }
         fetchMessages();
 
@@ -252,7 +255,7 @@ function ChatBox() {
         setProgress2(20);
         let msg = text;
         // axios.post(`http://localhost:5000/api/sendmsg`, { chat_id: selectedChat, msg }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
-        axios.post(`/api/sendmsg`, { chat_id: selectedChat, msg }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
+        axios.post(`${constants.baseUrl}/api/sendmsg`, { chat_id: selectedChat, msg }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
             .then(res => {
                 // console.log(res.data.payload)
                 if (res.data.success) {

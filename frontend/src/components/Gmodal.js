@@ -16,6 +16,7 @@ import { AddIcon, SearchIcon } from "@chakra-ui/icons"
 import axios from 'axios';
 import Gprofile from "./Gprofile"
 import { chatContext } from "../context/chatsState"
+import constants from '../constants';
 function Gmodal() {
   // console.log("render")
 
@@ -55,35 +56,40 @@ function Gmodal() {
       if (groupName) {
         setaxiosinprocess(true)
         // axios.post(`http://localhost:5000/api/creategroupchat`, { users: groupMembers, chatName: groupName }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
-        axios.post(`/api/creategroupchat`, { users: groupMembers, chatName: groupName }, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
-        .then(res => {
-          // console.log(res.data);
-          if (res.data.success) {
-            context.updateChats([res.data.payload, ...context.chats])
-            setgroupMembers([]);
-            setsearchUsers([])
-            setaxiosinprocess(false)
-            onClose();
-          }
-          else {
-            setaxiosinprocess(false)
+        axios
+          .post(
+            `${constants.baseUrl}/api/creategroupchat`,
+            { users: groupMembers, chatName: groupName },
+            { headers: { token: JSON.parse(localStorage.getItem("token")) } }
+          )
+          .then((res) => {
+            // console.log(res.data);
+            if (res.data.success) {
+              context.updateChats([res.data.payload, ...context.chats]);
+              setgroupMembers([]);
+              setsearchUsers([]);
+              setaxiosinprocess(false);
+              onClose();
+            } else {
+              setaxiosinprocess(false);
+              toast({
+                title: "ERROR OCCURED",
+                description: res.data.payload,
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+              });
+            }
+          })
+          .catch(function (error) {
+            setaxiosinprocess(false);
             toast({
-              title: "ERROR OCCURED",
-              description: res.data.payload,
-              status: 'error',
+              title: error.message,
+              status: "error",
               duration: 5000,
               isClosable: true,
             });
-          }
-        }).catch(function (error) {
-          setaxiosinprocess(false)
-          toast({
-            title: error.message,
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
           });
-        })
 
       }
       else {
@@ -117,33 +123,37 @@ function Gmodal() {
       setnoResultsFound(false);
       setshowloading(true);
       // axios.get(`http://localhost:5000/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
-      axios.get(`/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
-        .then(res => {
+      axios
+        .get(`${constants.baseUrl}/api/searchuser?search=${searchtext}`, {
+          headers: { token: JSON.parse(localStorage.getItem("token")) },
+        })
+        .then((res) => {
           // console.log(res.data);
-          if (res.data.success)
-            {setsearchUsers(res.data.payload);
-            if(res.data.payload.length <= 0){
-                     setnoResultsFound(true);
+          if (res.data.success) {
+            setsearchUsers(res.data.payload);
+            if (res.data.payload.length <= 0) {
+              setnoResultsFound(true);
             }
-            }
-          else {
+          } else {
             toast({
               title: "ERROR OCCURED",
               description: res.data.payload,
-              status: 'error',
+              status: "error",
               duration: 5000,
               isClosable: true,
             });
-          }setshowloading(false);
-        }).catch(function (error) {
+          }
+          setshowloading(false);
+        })
+        .catch(function (error) {
           setshowloading(false);
           toast({
             title: error.message,
-            status: 'error',
+            status: "error",
             duration: 5000,
             isClosable: true,
           });
-        })
+        });
     }
   }
 

@@ -14,6 +14,7 @@ import axios from 'axios';
 import Loader from "./Loader"
 import { SearchIcon } from "@chakra-ui/icons"
 import SUprofile from './SUprofile';
+import constants from '../constants';
 
 function SUModal({ isOpen, onOpen, onClose }) {
   // const { isOpen, onOpen, onClose } = useDisclosure()
@@ -32,35 +33,35 @@ function SUModal({ isOpen, onOpen, onClose }) {
       setnoResultsFound(false)
       setshowloading(true);
       // axios.get(`http://localhost:5000/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
-      axios.get(`/api/searchuser?search=${searchtext}`, { headers: { token: JSON.parse(localStorage.getItem("token")) } })
-        .then(res => {
+      axios
+        .get(`${constants.baseUrl}/api/searchuser?search=${searchtext}`, {
+          headers: { token: JSON.parse(localStorage.getItem("token")) },
+        })
+        .then((res) => {
           // console.log(res.data);
-          if (res.data.success)
-           { setsearchUsers(res.data.payload);
+          if (res.data.success) {
+            setsearchUsers(res.data.payload);
             setnoResultsFound(true);
-          }
-
-          else {
+          } else {
             toast({
               title: "ERROR OCCURED",
               description: res.data.payload,
-              status: 'error',
+              status: "error",
               duration: 5000,
               isClosable: true,
             });
           }
           setshowloading(false);
-        }
-        
-        ).catch(function (error) {
+        })
+        .catch(function (error) {
           setshowloading(false);
           toast({
             title: error.message,
-            status: 'error',
+            status: "error",
             duration: 5000,
             isClosable: true,
           });
-        })
+        });
       
     }
   }

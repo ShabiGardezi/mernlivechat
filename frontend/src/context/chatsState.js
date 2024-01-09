@@ -3,6 +3,7 @@ import axios from "axios"
 import io from "socket.io-client"
 import { userContext } from "../context/userState"
 import { useToast } from '@chakra-ui/react'
+import constants from "../constants"
 export const chatContext = createContext();
 
 export const ChatState = (props) => {
@@ -27,7 +28,7 @@ const _setselectedChat = (chat_id) => {
 
    useEffect(() => {
 
-    let socket = io("https://chatting-app-real-time.herokuapp.com/");
+    let socket = io(constants.baseUrl);
     setsocket(socket);
 
     socket.emit("setup", user._id);
@@ -109,32 +110,32 @@ useEffect(() => {
 
     const fetchChats=()=>{
 
-        axios.get(`/api/getallchats`, { headers: { token: JSON.parse(localStorage.getItem("token")) }
-    ,
-    onDownloadProgress: function (e) {
-      console.log(Math.trunc((e.loaded / e.total)*100))
-        setprogress(Math.trunc((e.loaded / e.total)*100))
-    } })
-        .then(res => {
-        if(res.data.success)
-         { 
-            setchats(res.data.payload)
-            // setloadingscreen(false);
-        //     setTimeout(() => {
-        //         setloadingscreen(false);
-                
-        // }, 1000);
-        }
-        
+        axios
+          .get(`${constants.baseUrl}/api/getallchats`, {
+            headers: { token: JSON.parse(localStorage.getItem("token")) },
+            onDownloadProgress: function (e) {
+              console.log(Math.trunc((e.loaded / e.total) * 100));
+              setprogress(Math.trunc((e.loaded / e.total) * 100));
+            },
+          })
+          .then((res) => {
+            if (res.data.success) {
+              setchats(res.data.payload);
+              // setloadingscreen(false);
+              //     setTimeout(() => {
+              //         setloadingscreen(false);
 
-        }).catch(function(error){
+              // }, 1000);
+            }
+          })
+          .catch(function (error) {
             toast({
-                title:error.message,
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
+              title: error.message,
+              status: "error",
+              duration: 5000,
+              isClosable: true,
             });
-        })
+          });
         
     }
 

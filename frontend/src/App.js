@@ -12,6 +12,7 @@ import {userContext} from "./context/userState"
 import Loader from './components/Loader';
 import { Flex } from '@chakra-ui/react';
 import axios from "axios"
+import constants from './constants';
 const Home=lazy(()=>import("./components/Home"))
 
 
@@ -22,7 +23,7 @@ function App() {
     let verifyToken=JSON.parse(localStorage.getItem("token"));
   if(verifyToken){
     
-    axios.get(`/api/verifyToken`, { headers: { token: verifyToken } }).then((res)=>{
+    axios.get(`${constants.baseUrl}/api/verifyToken`, { headers: { token: verifyToken } }).then((res)=>{
       if(res.data.success){
         setuser(res.data.payload);
       

@@ -5,6 +5,7 @@ import axios from "axios"
 import { Link as routerLink } from "react-router-dom";
 import { useToast } from '@chakra-ui/react'
 import {userContext} from "../context/userState"
+import constants from '../constants';
 function Login(props) {
 
   const [isloading, setisloading] = useState(false);
@@ -34,32 +35,35 @@ function Login(props) {
       const password = values.password;
 
       // axios.post(`http://localhost:5000/api/loginuser`, { email, password })
-      axios.post(`/api/loginuser`, { email, password })
-        .then(res => {
+      axios
+        .post(`${constants.baseUrl}/api/loginuser`, { email, password })
+        .then((res) => {
           // console.log(res.data);
           setisloading(false);
 
           if (res.data.success) {
             setuser(res.data.payload.user);
-            localStorage.setItem("token",JSON.stringify(res.data.payload.token) )
-          }
-          else{
-            
+            localStorage.setItem(
+              "token",
+              JSON.stringify(res.data.payload.token)
+            );
+          } else {
             showtoast({
               title: "ERROR OCCURED",
               description: res.data.payload,
               status: "error",
-              duration: 8000
-          });
+              duration: 8000,
+            });
           }
-        }).catch(function(error){
+        })
+        .catch(function (error) {
           setisloading(false);
           toast({
             title: error.message,
-            status: 'error',
+            status: "error",
             duration: 5000,
             isClosable: true,
-        });
+          });
         });
     }
   })

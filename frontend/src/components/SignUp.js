@@ -7,6 +7,7 @@ import axios from "axios"
 import { Link as routerLink, useNavigate } from "react-router-dom";
 import { useToast } from '@chakra-ui/react'
 import { CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
+import constants from '../constants';
 export default function SignUp(props) {
     let navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
@@ -41,38 +42,42 @@ export default function SignUp(props) {
             const password = values.password;
             const name=values.fname+" "+values.lname;
             // axios.post(`http://localhost:5000/api/createuser`, {name, email, password,pic })
-            axios.post(`/api/createuser`, {name, email, password,pic })
-                .then(res => {
-                   
-                    setisloading(false);
+            axios
+              .post(`${constants.baseUrl}/api/createuser`, {
+                name,
+                email,
+                password,
+                pic,
+              })
+              .then((res) => {
+                setisloading(false);
 
-                    if (res.data.success) 
-                    {
-                        navigate("/", { replace: true });
-                        showtoast({
-                            title: "ACCOUNT CREATED",
-                            description: "You can login now",
-                            status: "success",
-                            duration: 5000
-                        });
-                    }
-                    else{
-                        showtoast({
-                            title: "ERROR OCCURED",
-                            description: res.data.payload,
-                            status: "error",
-                            duration: 8000
-                        });
-                    }
-                }).catch(function(error){
-                    setisloading(false);
-                    toast({
-                        title: error.message,
-                        status: 'error',
-                        duration: 5000,
-                        isClosable: true,
-                    });
+                if (res.data.success) {
+                  navigate("/", { replace: true });
+                  showtoast({
+                    title: "ACCOUNT CREATED",
+                    description: "You can login now",
+                    status: "success",
+                    duration: 5000,
+                  });
+                } else {
+                  showtoast({
+                    title: "ERROR OCCURED",
+                    description: res.data.payload,
+                    status: "error",
+                    duration: 8000,
+                  });
+                }
+              })
+              .catch(function (error) {
+                setisloading(false);
+                toast({
+                  title: error.message,
+                  status: "error",
+                  duration: 5000,
+                  isClosable: true,
                 });
+              });
         }
     })
     const clickfileinput=()=>{

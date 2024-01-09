@@ -6,6 +6,7 @@ import {
   } from '@chakra-ui/react'
   import axios from 'axios';
   import {chatContext} from "../context/chatsState"
+import constants from '../constants';
 
 function SUprofile({name,img,_id,onClose}) {
   const toast = useToast();
@@ -27,32 +28,37 @@ function SUprofile({name,img,_id,onClose}) {
   }
   setaxiosinprocess(true);
   // axios.post(`http://localhost:5000/api/accesschat`, {user_id:_id},{ headers: { token: JSON.parse(localStorage.getItem("token")) } })
-  axios.post(`/api/accesschat`, {user_id:_id},{ headers: { token: JSON.parse(localStorage.getItem("token")) } })
-  .then(res => {
-    if(res.data.success)
-   { context.updateChats([res.data.payload,...context.chats])
-    setaxiosinprocess(false);
-    onClose();}
-    else{
+  axios
+    .post(
+      `${constants.baseUrl}/api/accesschat`,
+      { user_id: _id },
+      { headers: { token: JSON.parse(localStorage.getItem("token")) } }
+    )
+    .then((res) => {
+      if (res.data.success) {
+        context.updateChats([res.data.payload, ...context.chats]);
+        setaxiosinprocess(false);
+        onClose();
+      } else {
+        setaxiosinprocess(false);
+        toast({
+          title: "ERROR OCCURED",
+          description: res.data.payload,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    })
+    .catch(function (error) {
       setaxiosinprocess(false);
       toast({
-        title: "ERROR OCCURED",
-        description: res.data.payload,
-        status: 'error',
+        title: error.message,
+        status: "error",
         duration: 5000,
         isClosable: true,
+      });
     });
-    }
-
-  }).catch(function(error){
-    setaxiosinprocess(false);
-    toast({
-      title: error.message,
-      status: 'error',
-      duration: 5000,
-      isClosable: true,
-  });
-  })
  }
 
   return (
