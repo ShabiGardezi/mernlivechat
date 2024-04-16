@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const authuser = require('../../middlewares/authuser');
 const User =require("../../Models/userModel");
 
-const privateKey = "hunfaisagoodboy";
+const privateKey = "shabigardezi51214";
 
 router.get("/", authuser, async (req, res) => {
     if (req.user) {

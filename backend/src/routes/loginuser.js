@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-const privateKey = "hunfaisagoodboy";
+const privateKey = "shabigardezi51214";
 
 router.post("/", userExist, async (req, res) => {
     if (req.success) {
