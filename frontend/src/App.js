@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  import {useState,useContext,lazy,Suspense,useEffect} from 'react'
+=======
+import {useState,useContext,lazy,Suspense,useEffect} from 'react'
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import './App.css';
 import Login from './components/Login';
 import Signup from './components/SignUp';

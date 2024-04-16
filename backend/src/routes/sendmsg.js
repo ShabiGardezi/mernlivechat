@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  const express = require('express')
+=======
+const express = require('express')
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 const router = express.Router()
 const authuser = require('../../middlewares/authuser');
 const Message = require("../../Models/messageModel")

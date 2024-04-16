@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  import {React,useState,useContext} from 'react'
+=======
+import {React,useState,useContext} from 'react'
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import { Flex, Box, FormControl, FormLabel, Input, Checkbox, Stack, Button, Heading, Text, useColorModeValue,Link } from "@chakra-ui/react"
 import { useFormik } from "formik";
 import axios from "axios"

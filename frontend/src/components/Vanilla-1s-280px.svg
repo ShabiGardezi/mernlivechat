@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  <?xml version="1.0" encoding="utf-8"?>
+=======
+<?xml version="1.0" encoding="utf-8"?>
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 <svg xmlns="http://www.w3.org/2000/svg" style="margin: auto; background: rgb(241, 242, 243); display: block; shape-rendering: auto; animation-play-state: running; animation-delay: 0s;" width="280" height="250" preserveAspectRatio="xMidYMid">
 <style type="text/css" style="animation-play-state: running; animation-delay: 0s;">
   text {

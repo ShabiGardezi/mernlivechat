@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  import React, { useEffect, useState, useContext, useRef,useMemo, useCallback } from 'react'
+=======
+import React, { useEffect, useState, useContext, useRef,useMemo, useCallback } from 'react'
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import { Box, Flex, Text, Divider, Button, Avatar, AvatarBadge, Input, AvatarGroup, IconButton, useToast, Center, HStack, Image, Progress, VStack,useMediaQuery, useColorMode,useColorModeValue } from '@chakra-ui/react'
 import { AttachmentIcon } from '@chakra-ui/icons'
 import axios from "axios"

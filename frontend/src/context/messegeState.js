@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  import { createContext, useState, useEffect, useContext } from "react";
+=======
+import { createContext, useState, useEffect, useContext } from "react";
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import { userContext } from "../context/userState";
 import { chatContext } from "../context/chatsState";
 export const messegeContext = createContext();

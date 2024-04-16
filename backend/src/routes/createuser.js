@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 const express = require("express");
 const User = require("../../Models/userModel");
 const router = express.Router();

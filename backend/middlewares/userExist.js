@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  const User =require("../Models/userModel");
+=======
+const User =require("../Models/userModel");
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 
 module.exports=async(req,res,next)=>{
 

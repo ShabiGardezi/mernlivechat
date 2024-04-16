@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  import React, { useContext, useEffect, useState } from 'react'
+=======
+import React, { useContext, useEffect, useState } from 'react'
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import { Box, Container, Flex, Heading, Divider, Button, useMediaQuery } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 

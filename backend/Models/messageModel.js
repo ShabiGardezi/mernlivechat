@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  const mongoose = require('mongoose');
+=======
+const mongoose = require('mongoose');
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 const { Schema } = mongoose;
 
 const messageSchema = new Schema({

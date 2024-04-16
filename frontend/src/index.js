@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  import React from 'react';
+=======
+import React from 'react';
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';

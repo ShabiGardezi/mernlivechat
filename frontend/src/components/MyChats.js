@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  import React,{useContext,useState,useEffect} from 'react'
+=======
+import React,{useContext,useState,useEffect} from 'react'
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import { Box, Text, Divider, Icon, HStack, Badge, Avatar } from '@chakra-ui/react'
 import { chatContext } from "../context/chatsState"
 import { userContext } from "../context/userState"

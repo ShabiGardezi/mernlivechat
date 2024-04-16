@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  import React from 'react'
+=======
+import React from 'react'
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import { Flex, Box, FormControl, FormLabel, Input, InputGroup, HStack, InputRightElement, Stack, Button, Heading, Text, useColorModeValue,Link,Center, Avatar ,AvatarBadge ,IconButton, } from '@chakra-ui/react';
 import { useState } from 'react';
 import { ViewIcon, ViewOffIcon,SmallCloseIcon } from '@chakra-ui/icons';

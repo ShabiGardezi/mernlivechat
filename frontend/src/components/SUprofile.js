@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  import React ,{useContext,useState}from 'react'
+=======
+import React ,{useContext,useState}from 'react'
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import {
    Avatar,
     useToast,Box,Text

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import { React,useContext } from 'react'
 import ChatPage from "./ChatPage"
 import Navbar from "./Navbar"

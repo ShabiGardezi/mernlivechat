@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  import { useContext } from 'react';
+=======
+import { useContext } from 'react';
+>>>>>>> 7b41ae252efcd20fe6bf32f350a36250aec2a145
 import {
   Box,
   Flex,
